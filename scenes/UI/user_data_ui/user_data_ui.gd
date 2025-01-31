@@ -15,5 +15,5 @@ func _ready() -> void:
 func _on_user_name_submitted(new_name: String) -> void:
 	Globals.user_data.name = new_name
 
-func _on_user_color_changed(new_color) -> void:
+func _on_user_color_changed(new_color: Color) -> void:
 	Globals.user_data.color = new_color

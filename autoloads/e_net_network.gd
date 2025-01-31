@@ -1,6 +1,6 @@
 extends Node
 
-signal server_created
+signal server_created(slot_count: int)
 
 
 func _ready() -> void:
@@ -9,15 +9,17 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	
+	Lobby.lobby_closed.connect(_on_lobby_closed)
 
 
-func host(port: int, slots: int) -> void:
+func host(port: int, slot_count: int) -> void:
 	var enet_peer := ENetMultiplayerPeer.new()
-	var error := enet_peer.create_server(port, slots)
+	var error := enet_peer.create_server(port, slot_count)
 	assert(error == OK, "Could not host ENet lobby")
 	multiplayer.multiplayer_peer = enet_peer
 	print("ENetNetwork (%s): Server created" % multiplayer.get_unique_id())
-	server_created.emit()
+	server_created.emit(slot_count)
 
 func join(address: String, port: int) -> void:
 	var enet_peer := ENetMultiplayerPeer.new()
@@ -29,12 +31,12 @@ func join(address: String, port: int) -> void:
 
 #region Signal Functions
 
-func _on_server_created() -> void:
-	Lobby.initialize()
+func _on_server_created(slot_count: int) -> void:
+	Lobby.host(slot_count)
 
 func _on_connected_to_server() -> void:
 	print("ENetNetwork (%s): Connected to server" % multiplayer.get_unique_id())
-	Lobby.initialize()
+	Lobby.join()
 
 func _on_peer_connected(peer_id: int) -> void:
 	print("ENetNetwork (%s): peer %s connected" % [multiplayer.get_unique_id(), peer_id])
@@ -47,5 +49,9 @@ func _on_peer_disconnected(peer_id: int) -> void:
 func _on_server_disconnected() -> void:
 	print("ENetNetwork: Server disconnected")
 	Lobby.close()
+
+func _on_lobby_closed() -> void:
+	if multiplayer.multiplayer_peer:
+		multiplayer.multiplayer_peer.close()
 
 #endregion

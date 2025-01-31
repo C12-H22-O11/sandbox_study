@@ -12,6 +12,8 @@ extends PanelContainer
 
 func _ready() -> void:
 	Lobby.created.connect(_on_lobby_created)
+	Lobby.joined.connect(_on_lobby_joined)
+	Lobby.closed.connect(_on_lobby_closed)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
 

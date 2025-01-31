@@ -6,6 +6,7 @@ signal member_connected(member_id: int)
 signal member_disconnected(member_id: int)
 signal member_registered(member_id: int)
 signal member_unregistered(member_id: int)
+signal member_data_changed(member_id: int, data_type: MemberDataType, value: Variant)
 
 enum MemberDataType {
 	NAME,
@@ -13,7 +14,6 @@ enum MemberDataType {
 }
 
 var member_data := Dictionary()
-
 var in_lobby := false
 
 
@@ -22,6 +22,8 @@ func _ready() -> void:
 	member_disconnected.connect(_on_member_disconnected)
 	member_registered.connect(_on_member_registered)
 	member_unregistered.connect(_on_member_unregistered)
+	Globals.user_data.changed.connect(_on_user_data_changed)
+
 
 func get_local_data() -> Dictionary:
 	var data := Dictionary()
@@ -29,19 +31,28 @@ func get_local_data() -> Dictionary:
 	data[MemberDataType.COLOR] = Globals.user_data.color
 	return data
 
+func update_member_data() -> void:
+	var current_data := member_data[multiplayer.get_unique_id()] as Dictionary
+	var new_data := get_local_data()
+	
+	for data_type in MemberDataType.values():
+		var current_value: Variant = current_data[data_type]
+		var new_value: Variant = new_data[data_type]
+		if current_value != new_value:
+			set_member_data.rpc(data_type, new_value)
 
 func get_member_data(member_id: int, data_type: MemberDataType) -> Variant:
 	return member_data[member_id][data_type]
 
-
 func initialize() -> void:
 	member_data[multiplayer.get_unique_id()] = get_local_data()
+	in_lobby = true
 	initialized.emit()
 
 func close() -> void:
 	member_data = {}
+	in_lobby = false
 	closed.emit()
-
 
 func unregister(peer_id: int) -> void:
 	member_data.erase(peer_id)
@@ -55,6 +66,12 @@ func register(registration_data: Dictionary) -> void:
 	var sender_id := multiplayer.get_remote_sender_id()
 	member_data[sender_id] = registration_data
 	member_registered.emit(sender_id)
+
+@rpc("any_peer", "call_local", "reliable")
+func set_member_data(data_type: MemberDataType, value: Variant) -> void:
+	var sender_id := multiplayer.get_remote_sender_id()
+	member_data[sender_id][data_type] = value
+	member_data_changed.emit(sender_id, data_type, value)
 
 #endregion
 
@@ -72,5 +89,9 @@ func _on_member_registered(member_id: int) -> void:
 
 func _on_member_unregistered(member_id: int) -> void:
 	print("Lobby: member %s unregistered" % member_id)
+
+func _on_user_data_changed() -> void:
+	if in_lobby:
+		update_member_data()
 
 #endregion

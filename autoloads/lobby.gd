@@ -1,14 +1,16 @@
 extends Node
 
+signal created
+signal joined
+signal closed
 signal member_registered(member_id: int)
 signal member_unregistered(member_id: int)
 
 var member_data: Dictionary = {}
 
-
-func _ready() -> void:
-	ENetNetwork.peer_connected.connect(_on_e_net_peer_connected)
-	ENetNetwork.peer_disconnected.connect(_on_e_net_peer_disconnected)
+func close() -> void:
+	member_data = {}
+	closed.emit()
 
 
 func unregister(peer_id: int) -> void:

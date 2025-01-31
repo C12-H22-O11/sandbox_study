@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dn0tmptesmr8c"]
+[gd_scene load_steps=6 format=3 uid="uid://dn0tmptesmr8c"]
 
 [ext_resource type="Script" path="res://scenes/UI/network_ui/network_ui.gd" id="1_315m2"]
+[ext_resource type="Script" path="res://scenes/UI/user_data_ui/user_data_ui.gd" id="1_fus6c"]
 [ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="1_ss22t"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lq2cr"]
@@ -35,6 +36,21 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 size_flags_horizontal = 0
 alignment = 2
+
+[node name="UserDataUI" type="HBoxContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("user_name_line_edit", "user_color_picker_button")]
+layout_mode = 2
+script = ExtResource("1_fus6c")
+user_name_line_edit = NodePath("UserNameLineEdit")
+user_color_picker_button = NodePath("UserColorPickerButton")
+
+[node name="UserNameLineEdit" type="LineEdit" parent="Menu/MarginContainer/VBoxContainer/UserDataUI"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "User name..."
+
+[node name="UserColorPickerButton" type="ColorPickerButton" parent="Menu/MarginContainer/VBoxContainer/UserDataUI"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 
 [node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 0)

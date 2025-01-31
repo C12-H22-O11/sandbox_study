@@ -1,6 +1,7 @@
-extends VBoxContainer
+extends PanelContainer
 
 @export var member_container: Container
+@export var close_button: Button
 
 
 func _ready() -> void:
@@ -8,6 +9,7 @@ func _ready() -> void:
 	Lobby.closed.connect(_on_lobby_closed)
 	Lobby.member_registered.connect(_on_member_registered)
 	Lobby.member_unregistered.connect(_on_member_unregistered)
+	close_button.pressed.connect(_on_close_button_pressed)
 
 
 func fill() -> void:
@@ -36,14 +38,19 @@ func remove_member(member_id: int) -> void:
 
 func _on_lobby_initialized() -> void:
 	fill()
+	close_button.disabled = false
 
 func _on_lobby_closed() -> void:
 	clear()
+	close_button.disabled = true
 
 func _on_member_registered(member_id: int) -> void:
 	add_member(member_id)
 
 func _on_member_unregistered(member_id: int) -> void:
 	remove_member(member_id)
+
+func _on_close_button_pressed() -> void:
+	Lobby.close()
 
 #endregion

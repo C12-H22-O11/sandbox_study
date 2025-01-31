@@ -52,10 +52,13 @@ placeholder_text = "User name..."
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
-[node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer"]
+[node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("member_container", "close_button")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("1_ss22t")
+member_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/MemberContainer")
+close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI"]
 layout_mode = 2
@@ -87,10 +90,13 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer" node_paths=PackedStringArray("member_container")]
+[node name="MemberContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
-script = ExtResource("1_ss22t")
-member_container = NodePath(".")
+
+[node name="CloseButton" type="Button" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "Close / Leave"
 
 [node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("host_port_spin_box", "slots_spin_box", "host_button", "ip_adress_line_edit", "join_port_spin_box", "join_button")]
 custom_minimum_size = Vector2(300, 0)

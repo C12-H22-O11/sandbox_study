@@ -9,6 +9,8 @@ func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	
+	Lobby.closed.connect(_on_lobby_closed)
 
 
 func host(port: int, slots: int) -> void:
@@ -47,5 +49,9 @@ func _on_peer_disconnected(peer_id: int) -> void:
 func _on_server_disconnected() -> void:
 	print("ENetNetwork: Server disconnected")
 	Lobby.close()
+
+func _on_lobby_closed() -> void:
+	if multiplayer.multiplayer_peer:
+		multiplayer.multiplayer_peer.close()
 
 #endregion

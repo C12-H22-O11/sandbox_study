@@ -11,8 +11,7 @@ extends PanelContainer
 
 
 func _ready() -> void:
-	Lobby.created.connect(_on_lobby_created)
-	Lobby.joined.connect(_on_lobby_joined)
+	Lobby.initialized.connect(_on_lobby_initialized)
 	Lobby.closed.connect(_on_lobby_closed)
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
@@ -20,10 +19,7 @@ func _ready() -> void:
 
 #region Signal Functions
 
-func _on_lobby_created() -> void: 
-	hide()
-
-func _on_lobby_joined() -> void: 
+func _on_lobby_initialized() -> void: 
 	hide()
 
 func _on_lobby_closed() -> void:

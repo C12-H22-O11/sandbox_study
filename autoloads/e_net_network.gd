@@ -30,19 +30,19 @@ func join(address: String, port: int) -> void:
 #region Signal Functions
 
 func _on_server_created() -> void:
-	Lobby.created.emit()
+	Lobby.initialize()
 
 func _on_connected_to_server() -> void:
 	print("ENetNetwork (%s): Connected to server" % multiplayer.get_unique_id())
-	Lobby.joined.emit()
+	Lobby.initialize()
 
 func _on_peer_connected(peer_id: int) -> void:
 	print("ENetNetwork (%s): peer %s connected" % [multiplayer.get_unique_id(), peer_id])
-	Lobby.register.rpc_id(peer_id, {"id": multiplayer.get_unique_id()})
+	Lobby.member_connected.emit(peer_id)
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	print("ENetNetwork (%s): peer %s disconnected" % [multiplayer.get_unique_id(), peer_id])
-	Lobby.unregister(peer_id)
+	Lobby.member_disconnected.emit(peer_id)
 
 func _on_server_disconnected() -> void:
 	print("ENetNetwork: Server disconnected")

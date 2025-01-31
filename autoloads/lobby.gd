@@ -81,6 +81,9 @@ func unregister_member(member_id: int) -> void:
 	member_data.erase(member_id)
 	member_unregistered.emit(member_id)
 
+func kick(member_id: int) -> void:
+	multiplayer.multiplayer_peer.disconnect_peer(member_id)
+
 
 #region RPCs
 

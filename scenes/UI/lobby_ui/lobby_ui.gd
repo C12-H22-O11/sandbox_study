@@ -12,9 +12,13 @@ func _ready() -> void:
 	Lobby.member_registered.connect(_on_member_registered)
 	Lobby.member_unregistered.connect(_on_member_unregistered)
 	close_button.pressed.connect(_on_close_button_pressed)
+	fill()
 
 
 func fill() -> void:
+	if not Lobby.in_lobby:
+		return
+	
 	for member_id: int in Lobby.member_data:
 		add_member(multiplayer.get_unique_id())
 

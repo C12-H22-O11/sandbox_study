@@ -84,7 +84,6 @@ size_flags_horizontal = 3
 text = "Lobby"
 
 [node name="MemberCountLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 text = "0/2"
 horizontal_alignment = 2

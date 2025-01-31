@@ -21,8 +21,10 @@ func reset() -> void:
 func add_message(chat_message: ChatMessage) -> void:
 	var member_id := chat_message.member_id
 	var message := chat_message.message
+	var time_received := chat_message.time_received
 	var member_name := Lobby.get_member_data(member_id, Lobby.MemberData.NAME) as String
 	var member_color := Lobby.get_member_data(member_id, Lobby.MemberData.COLOR) as Color
+	chat_rich_text_label.append_text("%s - " % time_received)
 	chat_rich_text_label.push_color(member_color)
 	chat_rich_text_label.append_text("%s: " % member_name)
 	chat_rich_text_label.pop()
@@ -43,7 +45,8 @@ func _on_lobby_closed() -> void:
 	chat_message_line_edit.editable = false
 
 func _on_message_received(member_id: int, message: String) -> void:
-	var chat_message := ChatMessage.new(member_id, message)
+	var time_received := Time.get_time_string_from_system()
+	var chat_message := ChatMessage.new(member_id, message, time_received)
 	chat_messages.append(chat_message)
 	add_message(chat_message)
 
@@ -60,7 +63,9 @@ func _on_chat_message_submitted(message: String) -> void:
 class ChatMessage:
 	var member_id: int
 	var message: String
+	var time_received: String
 	
-	func _init(_member_id: int, _message: String) -> void:
+	func _init(_member_id: int, _message: String, _time_received: String) -> void:
 		member_id = _member_id
 		message = _message
+		time_received = _time_received

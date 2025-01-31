@@ -11,5 +11,11 @@ config_version=5
 [application]
 
 config/name="Sandbox Study"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+ENetNetwork="*res://autoloads/e_net_network.gd"
+Lobby="*res://autoloads/lobby.gd"

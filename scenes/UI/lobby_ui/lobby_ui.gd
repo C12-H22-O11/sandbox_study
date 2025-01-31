@@ -23,7 +23,8 @@ func clear() -> void:
 
 func add_member(member_id: int) -> void:
 	var member_label := Label.new()
-	member_label.text = "%s" % member_id
+	var member_name := Lobby.get_member_data(member_id, Lobby.MemberDataType.NAME) as String
+	member_label.text = "%s" % member_name
 	member_container.add_child(member_label)
 
 func remove_member(member_id: int) -> void:

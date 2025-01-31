@@ -17,5 +17,6 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Globals="*res://autoloads/globals.gd"
 ENetNetwork="*res://autoloads/e_net_network.gd"
 Lobby="*res://autoloads/lobby.gd"

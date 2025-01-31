@@ -7,11 +7,12 @@ signal member_disconnected(member_id: int)
 signal member_registered(member_id: int)
 signal member_unregistered(member_id: int)
 
-enum MemberData {
+enum MemberDataType {
 	NAME,
+	COLOR
 }
 
-var member_data: Dictionary = {}
+var member_data := Dictionary()
 
 var in_lobby := false
 
@@ -22,13 +23,25 @@ func _ready() -> void:
 	member_registered.connect(_on_member_registered)
 	member_unregistered.connect(_on_member_unregistered)
 
+func get_local_data() -> Dictionary:
+	var data := Dictionary()
+	data[MemberDataType.NAME] = Globals.user_data.name
+	data[MemberDataType.COLOR] = Globals.user_data.color
+	return data
+
+
+func get_member_data(member_id: int, data_type: MemberDataType) -> Variant:
+	return member_data[member_id][data_type]
+
 
 func initialize() -> void:
+	member_data[multiplayer.get_unique_id()] = get_local_data()
 	initialized.emit()
 
 func close() -> void:
 	member_data = {}
 	closed.emit()
+
 
 func unregister(peer_id: int) -> void:
 	member_data.erase(peer_id)
@@ -49,7 +62,7 @@ func register(registration_data: Dictionary) -> void:
 #region Signal Functions
 
 func _on_member_connected(member_id: int) -> void:
-	register.rpc_id(member_id, {"id": multiplayer.get_unique_id()})
+	register.rpc_id(member_id, get_local_data())
 
 func _on_member_disconnected(member_id: int) -> void:
 	unregister(member_id)

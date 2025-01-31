@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dn0tmptesmr8c"]
+[gd_scene load_steps=7 format=3 uid="uid://dn0tmptesmr8c"]
 
 [ext_resource type="Script" path="res://scenes/UI/network_ui/network_ui.gd" id="1_315m2"]
 [ext_resource type="Script" path="res://scenes/UI/user_data_ui/user_data_ui.gd" id="1_fus6c"]
 [ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="1_ss22t"]
+[ext_resource type="Script" path="res://scenes/UI/chat_ui/chat_ui.gd" id="4_munrg"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lq2cr"]
 size = Vector2(0, 0)
@@ -32,56 +33,70 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 alignment = 2
 
-[node name="UserDataUI" type="HBoxContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("user_name_line_edit", "user_color_picker_button")]
+[node name="UserDataUI" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("user_name_line_edit", "user_color_picker_button")]
 layout_mode = 2
 script = ExtResource("1_fus6c")
 user_name_line_edit = NodePath("UserNameLineEdit")
 user_color_picker_button = NodePath("UserColorPickerButton")
 
-[node name="UserNameLineEdit" type="LineEdit" parent="Menu/MarginContainer/VBoxContainer/UserDataUI"]
+[node name="UserNameLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/UserDataUI"]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "User name..."
 
-[node name="UserColorPickerButton" type="ColorPickerButton" parent="Menu/MarginContainer/VBoxContainer/UserDataUI"]
+[node name="UserColorPickerButton" type="ColorPickerButton" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/UserDataUI"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 
-[node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("member_container", "close_button")]
+[node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("member_count_label", "member_container", "close_button")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("1_ss22t")
+member_count_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MemberCountLabel")
 member_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/MemberContainer")
 close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
 
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI"]
+[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="LobbyLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Lobby"
 
-[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
+[node name="MemberCountLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+text = "0/2"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -90,15 +105,15 @@ theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="MemberContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="MemberContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="CloseButton" type="Button" parent="Menu/MarginContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
+[node name="CloseButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
 layout_mode = 2
 disabled = true
 text = "Close / Leave"
 
-[node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer/VBoxContainer" node_paths=PackedStringArray("host_port_spin_box", "slots_spin_box", "host_button", "ip_adress_line_edit", "join_port_spin_box", "join_button")]
+[node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("host_port_spin_box", "slots_spin_box", "host_button", "ip_adress_line_edit", "join_port_spin_box", "join_button")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 script = ExtResource("1_315m2")
@@ -109,44 +124,44 @@ ip_adress_line_edit = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBox
 join_port_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/PortSpinBox")
 join_button = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/JoinButton")
 
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI"]
+[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="IPLabel" type="Label" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="IPLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "ENet Networking"
 vertical_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Host" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Host" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
+[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
 layout_mode = 2
 theme_override_icons/updown = SubResource("PlaceholderTexture2D_lq2cr")
 max_value = 65653.0
 value = 25565.0
 prefix = "Port :"
 
-[node name="SlotsSpinBox" type="SpinBox" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
+[node name="SlotsSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
 layout_mode = 2
 theme_override_icons/updown = SubResource("PlaceholderTexture2D_0q1wm")
 min_value = 2.0
@@ -154,30 +169,57 @@ max_value = 32.0
 value = 2.0
 prefix = "Slots :"
 
-[node name="HostButton" type="Button" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
+[node name="HostButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
 layout_mode = 2
 text = "Host"
 
-[node name="VSeparator" type="VSeparator" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="Join" type="VBoxContainer" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Join" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="IPLineEdit" type="LineEdit" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
+[node name="IPLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "localhost"
 placeholder_text = "IP Address"
 
-[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
+[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
 layout_mode = 2
 theme_override_icons/updown = SubResource("PlaceholderTexture2D_lq2cr")
 max_value = 65653.0
 value = 25565.0
 prefix = "Port :"
 
-[node name="JoinButton" type="Button" parent="Menu/MarginContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
+[node name="JoinButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
 layout_mode = 2
 text = "Join"
+
+[node name="ChatUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer" node_paths=PackedStringArray("chat_rich_text_label", "chat_message_line_edit")]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("4_munrg")
+chat_rich_text_label = NodePath("MarginContainer/VBoxContainer/ChatRichTextLabel")
+chat_message_line_edit = NodePath("MarginContainer/VBoxContainer/ChatMessageLineEdit")
+
+[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/ChatUI"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer"]
+layout_mode = 2
+
+[node name="ChatRichTextLabel" type="RichTextLabel" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+
+[node name="ChatMessageLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = " Enter chat message here..."
+editable = false

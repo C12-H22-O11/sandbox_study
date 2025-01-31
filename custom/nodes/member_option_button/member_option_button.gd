@@ -1,4 +1,4 @@
-class_name MemberLabel extends Label
+class_name MemberMenuButton extends MenuButton
 
 var member_id: int
 

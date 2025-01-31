@@ -30,11 +30,11 @@ func update_member_count_label() -> void:
 	member_count_label.text = member_count_str
 
 func add_member(member_id: int) -> void:
-	member_container.add_child(MemberLabel.new(member_id))
+	member_container.add_child(MemberMenuButton.new(member_id))
 
 func remove_member(member_id: int) -> void:
-	for member_label: MemberLabel in member_container.get_children().filter(
-		func(m: MemberLabel) -> bool: return m.member_id == member_id
+	for member_label: MemberMenuButton in member_container.get_children().filter(
+		func(m: MemberMenuButton) -> bool: return m.member_id == member_id
 		):
 		member_container.remove_child(member_label)
 		member_label.queue_free()

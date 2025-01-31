@@ -1,6 +1,6 @@
 extends Node
 
-@onready var user_data := UserData.load_or_create()
+var user_data := UserData.load_or_create()
 
 
 func _ready() -> void:

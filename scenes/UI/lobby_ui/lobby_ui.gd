@@ -12,7 +12,7 @@ func _ready() -> void:
 
 func fill() -> void:
 	add_member(multiplayer.get_unique_id())
-	for member_id in Lobby.member_data:
+	for member_id: int in Lobby.member_data:
 		pass
 
 func clear() -> void:
@@ -22,13 +22,14 @@ func clear() -> void:
 
 
 func add_member(member_id: int) -> void:
-	var member_label := Label.new()
-	var member_name := Lobby.get_member_data(member_id, Lobby.MemberDataType.NAME) as String
-	member_label.text = "%s" % member_name
-	member_container.add_child(member_label)
+	member_container.add_child(MemberLabel.new(member_id))
 
 func remove_member(member_id: int) -> void:
-	pass
+	for member_label: MemberLabel in member_container.get_children().filter(
+		func(m: MemberLabel): return m.member_id == member_id
+		):
+		member_container.remove_child(member_label)
+		member_label.queue_free()
 
 
 #region Signal Functions

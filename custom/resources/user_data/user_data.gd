@@ -18,6 +18,6 @@ func save() -> void:
 
 
 static func load_or_create() -> UserData:
-	if ResourceLoader.exists(PATH, "UserData"):
-		return ResourceLoader.load(PATH, "UserData")
+	if ResourceLoader.exists(PATH ):
+		return ResourceLoader.load(PATH)
 	return UserData.new()

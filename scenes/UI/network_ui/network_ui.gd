@@ -18,6 +18,8 @@ func _ready() -> void:
 	join_button.pressed.connect(_on_join_pressed)
 
 
+#region Signal Functions
+
 func _on_lobby_created() -> void: 
 	hide()
 
@@ -36,3 +38,5 @@ func _on_join_pressed() -> void:
 	var address := ip_adress_line_edit.text
 	var port := int(join_port_spin_box.value)
 	ENetNetwork.join(address, port)
+
+#endregion

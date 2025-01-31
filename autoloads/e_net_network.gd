@@ -27,6 +27,8 @@ func join(address: String, port: int) -> void:
 	print("ENetNetwork (%s): Client created" % multiplayer.get_unique_id())
 
 
+#region Signal Functions
+
 func _on_server_created() -> void:
 	Lobby.created.emit()
 
@@ -45,3 +47,5 @@ func _on_peer_disconnected(peer_id: int) -> void:
 func _on_server_disconnected() -> void:
 	print("ENetNetwork: Server disconnected")
 	Lobby.close()
+
+#endregion

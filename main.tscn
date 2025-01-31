@@ -1,4 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://dn0tmptesmr8c"]
+[gd_scene load_steps=4 format=3 uid="uid://dn0tmptesmr8c"]
+
+[ext_resource type="Script" path="res://scenes/UI/network_ui/network_ui.gd" id="1_315m2"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lq2cr"]
 size = Vector2(0, 0)
@@ -28,11 +30,18 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer"]
+[node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer" node_paths=PackedStringArray("host_port_spin_box", "slots_spin_box", "host_button", "ip_adress_line_edit", "join_port_spin_box", "join_button")]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
+script = ExtResource("1_315m2")
+host_port_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/PortSpinBox")
+slots_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/SlotsSpinBox")
+host_button = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/HostButton")
+ip_adress_line_edit = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/IPLineEdit")
+join_port_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/PortSpinBox")
+join_button = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/JoinButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/NetworkUI"]
 layout_mode = 2

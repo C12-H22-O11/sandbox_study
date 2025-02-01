@@ -78,7 +78,7 @@ func close() -> void:
 	lobby_closed.emit()
 
 func unregister_member(member_id: int) -> void:
-	member_data.erase(member_id)
+	#member_data.erase(member_id)
 	member_unregistered.emit(member_id)
 
 func kick(member_id: int) -> void:

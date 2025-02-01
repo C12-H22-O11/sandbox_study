@@ -17,20 +17,26 @@ func host() -> void:
 	var port: int = Globals.e_net_settings.host_port
 	var slots: int = Globals.e_net_settings.host_slots
 	var enet_peer := ENetMultiplayerPeer.new()
+	print("ENetNetwork: Attempting to create %s slot(s) server using port %s" % [slots, port])
 	var error := enet_peer.create_server(port, slots)
-	assert(error == OK, "Could not host ENet lobby")
+	if error != OK:
+		assert(error == OK, "ENetNetwork: Failed to create %s slot(s) server using port %s with code: %s" % [slots, port, error])
+		return
 	multiplayer.multiplayer_peer = enet_peer
-	print("ENetNetwork (%s): Server created" % multiplayer.get_unique_id())
+	print("ENetNetwork (%s): Successfully created %s slot(s) server using port %s" % [multiplayer.get_unique_id(), slots, port])
 	server_created.emit(slots)
 
 func join() -> void:
 	var ip: String = Globals.e_net_settings.join_ip
 	var port: int = Globals.e_net_settings.join_port
+	print("ENetNetwork: Attempting to create client using %s:%s" % [ip, port])
 	var enet_peer := ENetMultiplayerPeer.new()
 	var error := enet_peer.create_client(ip, port)
-	assert(error == OK, "Could not create ENet client")
+	if error != OK:
+		assert(error == OK, "ENetNetwork: Failed to create client using %s:%s with code: %s" % [ip, port, error])
+		return
 	multiplayer.multiplayer_peer = enet_peer
-	print("ENetNetwork (%s): Client created" % multiplayer.get_unique_id())
+	print("ENetNetwork (%s): Successfully created client using %s:%s" % [multiplayer.get_unique_id(), ip, port])
 
 
 #region Signal Functions

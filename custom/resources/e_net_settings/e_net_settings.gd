@@ -11,7 +11,7 @@ const PATH := "user://e_net_settings.tres"
 @export var host_port: int = 25565:
 	set(value):
 		if host_port != value:
-			join_port = value
+			host_port = value
 			emit_changed()
 
 @export_category("Join")

@@ -5,12 +5,14 @@ const PATH := "user://user_data.tres"
 
 @export var name: String = "Player":
 	set(value):
-		name = value
-		emit_changed()
+		if name != value:
+			name = value
+			emit_changed()
 @export var color: Color = Color.AQUA:
 	set(value):
-		color = value
-		emit_changed()
+		if color != value:
+			color = value
+			emit_changed()
 
 
 func save() -> void:

@@ -13,17 +13,21 @@ func _ready() -> void:
 	Lobby.lobby_closed.connect(_on_lobby_closed)
 
 
-func host(port: int, slot_count: int) -> void:
+func host() -> void:
+	var port: int = Globals.e_net_settings.host_port
+	var slots: int = Globals.e_net_settings.host_slots
 	var enet_peer := ENetMultiplayerPeer.new()
-	var error := enet_peer.create_server(port, slot_count)
+	var error := enet_peer.create_server(port, slots)
 	assert(error == OK, "Could not host ENet lobby")
 	multiplayer.multiplayer_peer = enet_peer
 	print("ENetNetwork (%s): Server created" % multiplayer.get_unique_id())
-	server_created.emit(slot_count)
+	server_created.emit(slots)
 
-func join(address: String, port: int) -> void:
+func join() -> void:
+	var ip: String = Globals.e_net_settings.join_ip
+	var port: int = Globals.e_net_settings.join_port
 	var enet_peer := ENetMultiplayerPeer.new()
-	var error := enet_peer.create_client(address, port)
+	var error := enet_peer.create_client(ip, port)
 	assert(error == OK, "Could not create ENet client")
 	multiplayer.multiplayer_peer = enet_peer
 	print("ENetNetwork (%s): Client created" % multiplayer.get_unique_id())

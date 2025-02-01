@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=8 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="1_tkb72"]
+[ext_resource type="PackedScene" uid="uid://8x27mf3mb8sd" path="res://scenes/player/player.tscn" id="2_khodt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -45,6 +46,10 @@ shape = SubResource("BoxShape3D_561iv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Terrain/StaticBody3D"]
 mesh = SubResource("PlaneMesh_6jpfk")
+
+[node name="Players" type="Node3D" parent="World"]
+
+[node name="Player" parent="World/Players" instance=ExtResource("2_khodt")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)

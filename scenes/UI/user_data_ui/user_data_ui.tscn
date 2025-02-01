@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmowo38idccga"]
+
+[ext_resource type="Script" path="res://scenes/UI/user_data_ui/user_data_ui.gd" id="1_4f0mv"]
+
+[node name="UserDataUI" type="HBoxContainer" node_paths=PackedStringArray("user_name_line_edit", "user_color_picker_button")]
+script = ExtResource("1_4f0mv")
+user_name_line_edit = NodePath("UserNameLineEdit")
+user_color_picker_button = NodePath("UserColorPickerButton")
+
+[node name="UserNameLineEdit" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "User name..."
+
+[node name="UserColorPickerButton" type="ColorPickerButton" parent="."]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2

@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://dn0tmptesmr8c"]
 
 [ext_resource type="Script" path="res://scenes/levels/level_spawner.gd" id="1_6uque"]
-[ext_resource type="PackedScene" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="2_rbfoh"]
-[ext_resource type="PackedScene" path="res://scenes/UI/lobby_ui/lobby_ui.tscn" id="4_8x48o"]
-[ext_resource type="PackedScene" path="res://scenes/UI/network_ui/network_ui.tscn" id="4_pst6q"]
-[ext_resource type="PackedScene" path="res://scenes/UI/chat_ui/chat_ui.tscn" id="5_acriv"]
+[ext_resource type="PackedScene" uid="uid://bmowo38idccga" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="2_rbfoh"]
+[ext_resource type="PackedScene" uid="uid://pvhkqkqlgr3b" path="res://scenes/UI/lobby_ui/lobby_ui.tscn" id="4_8x48o"]
+[ext_resource type="PackedScene" uid="uid://0ov0b4ebb6sl" path="res://scenes/UI/network_ui/network_ui.tscn" id="4_pst6q"]
+[ext_resource type="PackedScene" uid="uid://bp4mwr3c2m013" path="res://scenes/UI/chat_ui/chat_ui.tscn" id="5_acriv"]
 
 [node name="Main" type="Node"]
 

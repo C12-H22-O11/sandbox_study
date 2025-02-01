@@ -1,6 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="1_tkb72"]
+[ext_resource type="PackedScene" uid="uid://ccgr4hm2gwslp" path="res://scenes/levels/ball/ball.tscn" id="2_1c4nm"]
+[ext_resource type="Script" path="res://scenes/levels/object_spawner.gd" id="3_pcx8o"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -17,24 +19,23 @@ sky = SubResource("Sky_2m55f")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="GDScript" id="GDScript_73rpq"]
+script/source = "extends StaticBody3D
+
+@export var spawner: MultiplayerSpawner
+
+
+func _input_event(camera: Camera3D, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
+	if event is InputEventMouseButton:
+		spawner.spawn(event_position)
+"
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_561iv"]
 size = Vector3(32, 1, 32)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6jpfk"]
 material = ExtResource("1_tkb72")
 size = Vector2(32, 32)
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_4vkii"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_4x8c5"]
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qsdbk"]
-properties/0/path = NodePath(".:linear_velocity")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:position")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [node name="SandboxLevel" type="Node"]
 
@@ -49,7 +50,9 @@ shadow_enabled = true
 
 [node name="Terrain" type="Node3D" parent="World"]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="World/Terrain"]
+[node name="StaticBody3D" type="StaticBody3D" parent="World/Terrain" node_paths=PackedStringArray("spawner")]
+script = SubResource("GDScript_73rpq")
+spawner = NodePath("../../ObjectSpawner")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Terrain/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -58,18 +61,14 @@ shape = SubResource("BoxShape3D_561iv")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Terrain/StaticBody3D"]
 mesh = SubResource("PlaneMesh_6jpfk")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="World"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-linear_velocity = Vector3(2, 0, 0)
+[node name="Objects" type="Node3D" parent="World"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/RigidBody3D"]
-shape = SubResource("SphereShape3D_4vkii")
+[node name="Ball" parent="World/Objects" instance=ExtResource("2_1c4nm")]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/RigidBody3D"]
-mesh = SubResource("SphereMesh_4x8c5")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="World/RigidBody3D"]
-replication_config = SubResource("SceneReplicationConfig_qsdbk")
+[node name="ObjectSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://scenes/levels/ball/ball.tscn")
+spawn_path = NodePath("../Objects")
+script = ExtResource("3_pcx8o")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)

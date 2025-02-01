@@ -15,3 +15,7 @@ func spawn_level(_data = null) -> Node:
 func _on_lobby_initialized() -> void:
 	if Lobby.is_owner:
 		spawn()
+
+func _on_lobby_closed() -> void:
+	for child in get_node(spawn_path).get_children():
+		child.queue_free()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="1_tkb72"]
 
@@ -27,6 +27,14 @@ size = Vector2(32, 32)
 [sub_resource type="SphereShape3D" id="SphereShape3D_4vkii"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_4x8c5"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_qsdbk"]
+properties/0/path = NodePath(".:linear_velocity")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="SandboxLevel" type="Node"]
 
@@ -59,6 +67,9 @@ shape = SubResource("SphereShape3D_4vkii")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/RigidBody3D"]
 mesh = SubResource("SphereMesh_4x8c5")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="World/RigidBody3D"]
+replication_config = SubResource("SceneReplicationConfig_qsdbk")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)

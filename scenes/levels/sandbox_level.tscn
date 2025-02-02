@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="Script" path="res://scenes/levels/spawning_platform.gd" id="1_c8asd"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="1_tkb72"]
 [ext_resource type="Script" path="res://scenes/levels/player_spawner.gd" id="3_1rg0g"]
+[ext_resource type="PackedScene" uid="uid://b4gmmr676xj15" path="res://scenes/terrain/wall.tscn" id="3_he61m"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -49,6 +50,20 @@ shape = SubResource("BoxShape3D_561iv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Terrain/Platform"]
 mesh = SubResource("PlaneMesh_6jpfk")
+
+[node name="Walls" type="Node3D" parent="World/Terrain"]
+
+[node name="EastWall" parent="World/Terrain/Walls" instance=ExtResource("3_he61m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 0, 0)
+
+[node name="WestWall" parent="World/Terrain/Walls" instance=ExtResource("3_he61m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.75, 0, 0)
+
+[node name="SudWall" parent="World/Terrain/Walls" instance=ExtResource("3_he61m")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 15.75)
+
+[node name="NorthWall" parent="World/Terrain/Walls" instance=ExtResource("3_he61m")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -15.75)
 
 [node name="Players" type="Node3D" parent="World"]
 

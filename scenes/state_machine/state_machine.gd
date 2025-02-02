@@ -1,7 +1,11 @@
 class_name StateMachine extends Node
 
+signal state_exited(state: State)
+signal state_entered(state: State)
+signal transitioned(from: State, to: State)
+
 @export var current_state: State
-@export var state_label: Label
+
 
 func _ready() -> void:
 	assert(current_state != null, "State does not have current node")
@@ -19,6 +23,9 @@ func _physics_process(delta: float) -> void:
 func transition(to: NodePath) -> void:
 	var previous_state := 	await current_state.exit()
 	var target_state := get_node(to) as State
+	state_exited.emit(previous_state)
+	
 	current_state = target_state
-	target_state.enter(previous_state)
-	state_label.text = current_state.name
+	await target_state.enter(previous_state)
+	state_entered.emit(target_state)
+	transitioned.emit(previous_state, current_state)

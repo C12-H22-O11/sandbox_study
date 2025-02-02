@@ -6,6 +6,7 @@ const JUMP_VELOCITY := 5.0
 @export var input: InputSynchronizer
 
 @export var visuals: Node3D
+@export var label: Label3D
 @export var head: Node3D 
 @export var camera: Camera3D 
 @export var velo: Vector3: 
@@ -18,6 +19,8 @@ const JUMP_VELOCITY := 5.0
 func setup_multiplayer(id: int) -> void:
 	input.set_multiplayer_authority(id)
 	visuals.set_multiplayer_authority((id))
+	label.text = Lobby.get_member_data(id, Lobby.MemberData.NAME)
+	label.modulate = Lobby.get_member_data(id, Lobby.MemberData.COLOR)
 	var local_id := multiplayer.get_unique_id()
 	if local_id == id:
 		camera.make_current()
@@ -27,18 +30,17 @@ func setup_multiplayer(id: int) -> void:
 func apply_movement(speed: float, acceleration: float, deceleration: float, delta: float, airborne := false) -> void:
 	var input_dir := input.input_direction
 	var direction := input_dir.rotated(-visuals.rotation.y)
+	
 	var planar_velocity := get_planar_velocity()
 	var target_velocity := direction * speed
-	var attempting_to_move := not input_dir.is_zero_approx()
+	var acceleration_factor := (signf(planar_velocity.dot(target_velocity)) + 1) / 2.0
+	var target_acceleration := lerpf(deceleration, acceleration, acceleration_factor)
 	
 	if airborne:
 		var held_speed := maxf(direction.normalized().dot(planar_velocity), 0.0)
 		target_velocity = direction * maxf(held_speed, speed)
 	
-	if attempting_to_move:
-		planar_velocity =  planar_velocity.move_toward(target_velocity, acceleration * delta)
-	else:
-		planar_velocity =  planar_velocity.move_toward(target_velocity, deceleration * delta)
+	planar_velocity =  planar_velocity.move_toward(target_velocity, target_acceleration * delta)
 	
 	velocity.x = planar_velocity.x
 	velocity.z = planar_velocity.y

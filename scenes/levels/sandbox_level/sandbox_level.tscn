@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="Script" path="res://scenes/levels/spawning_platform.gd" id="1_g20d6"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
 [ext_resource type="Script" path="res://scenes/levels/spawners/player_spawner.gd" id="3_e2ucm"]
+[ext_resource type="Script" path="res://scenes/levels/spawners/object_spawner.gd" id="4_bp5yb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -56,6 +57,13 @@ mesh = SubResource("PlaneMesh_6jpfk")
 _spawnable_scenes = PackedStringArray("res://scenes/player/player.tscn")
 spawn_path = NodePath("../Players")
 script = ExtResource("3_e2ucm")
+
+[node name="Objects" type="Node3D" parent="World"]
+
+[node name="ObjectSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://scenes/ball/ball.tscn")
+spawn_path = NodePath("../Objects")
+script = ExtResource("4_bp5yb")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)

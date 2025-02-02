@@ -3,6 +3,8 @@ extends CharacterBody3D
 
 const JUMP_VELOCITY := 5.0
 
+var owner_id: int = 1
+
 @export var input: InputSynchronizer
 
 @export var visuals: Node3D
@@ -10,6 +12,7 @@ const JUMP_VELOCITY := 5.0
 @export var head: Node3D 
 @export var camera: Camera3D 
 @export var velo: Vector3: 
+
 	set(value):
 		velocity = value
 	get:

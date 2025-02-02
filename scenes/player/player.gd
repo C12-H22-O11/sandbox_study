@@ -24,17 +24,16 @@ func setup_multiplayer(id: int) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-
-func apply_movement(speed: float, acceleration: float, deceleration: float, delta: float, floating := false) -> void:
+func apply_movement(speed: float, acceleration: float, deceleration: float, delta: float, airborne := false) -> void:
 	var input_dir := input.input_direction
 	var direction := input_dir.rotated(-visuals.rotation.y)
 	var planar_velocity := get_planar_velocity()
 	var target_velocity := direction * speed
 	var attempting_to_move := not input_dir.is_zero_approx()
 	
-	if floating:
-		var f := target_velocity.normalized().dot(planar_velocity.normalized())
-		target_velocity = direction * maxf(lerp(speed, planar_velocity.length(), f), speed)
+	if airborne:
+		var held_speed := maxf(direction.normalized().dot(planar_velocity), 0.0)
+		target_velocity = direction * maxf(held_speed, speed)
 	
 	if attempting_to_move:
 		planar_velocity =  planar_velocity.move_toward(target_velocity, acceleration * delta)
@@ -47,12 +46,9 @@ func apply_movement(speed: float, acceleration: float, deceleration: float, delt
 func get_planar_velocity() -> Vector2:
 	return Vector2(velocity.x, velocity.z)
 
-
-
 func apply_gravity(gravity: Vector3, delta: float) -> void:
 	if not is_on_floor():
 		velocity += gravity * delta
-
 
 func jump() -> void:
 		velocity.y = JUMP_VELOCITY

@@ -1,4 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=12 format=3 uid="uid://kop0l0v86hog"]
+
+[ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
+[ext_resource type="PackedScene" uid="uid://b4gmmr676xj15" path="res://scenes/terrain/wall.tscn" id="3_he61m"]
+[ext_resource type="PackedScene" uid="uid://q4h774jjxk8l" path="res://scenes/terrain/box.tscn" id="4_gmwb0"]
+[ext_resource type="PackedScene" uid="uid://p1uhdnevjeuo" path="res://Assets/map_blender_test.glb" id="6_g4cg7"]
 
 [ext_resource type="Script" path="res://scenes/levels/spawning_platform.gd" id="1_g20d6"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -20,12 +25,12 @@ sky = SubResource("Sky_2m55f")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_561iv"]
-size = Vector3(32, 1, 32)
+[sub_resource type="BoxShape3D" id="BoxShape3D_8kuh5"]
+size = Vector3(8, 1, 32)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_6jpfk"]
-material = ExtResource("2_2oyl2")
-size = Vector2(32, 32)
+[sub_resource type="PlaneMesh" id="PlaneMesh_dywrv"]
+material = ExtResource("2_2emca")
+size = Vector2(8, 32)
 
 [node name="SandboxLevel" type="Node"]
 
@@ -40,16 +45,79 @@ shadow_enabled = true
 
 [node name="Terrain" type="Node3D" parent="World"]
 
-[node name="Platform" type="StaticBody3D" parent="World/Terrain" node_paths=PackedStringArray("player_spawner")]
-script = ExtResource("1_g20d6")
-player_spawner = NodePath("../../PlayerSpawner")
+[node name="Walls" type="Node3D" parent="World/Terrain"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Terrain/Platform"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-shape = SubResource("BoxShape3D_561iv")
+[node name="PlatformWalls" type="Node3D" parent="World/Terrain/Walls"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Terrain/Platform"]
-mesh = SubResource("PlaneMesh_6jpfk")
+[node name="EastWall" parent="World/Terrain/Walls/PlatformWalls" instance=ExtResource("3_he61m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.75, 0, 0)
+
+[node name="WestWall" parent="World/Terrain/Walls/PlatformWalls" instance=ExtResource("3_he61m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.75, 0, 0)
+
+[node name="SudWall" parent="World/Terrain/Walls/PlatformWalls" instance=ExtResource("3_he61m")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 15.75)
+
+[node name="NorthWall" type="CSGCombiner3D" parent="World/Terrain/Walls/PlatformWalls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2.5, -15.75)
+use_collision = true
+
+[node name="Wall" type="CSGBox3D" parent="World/Terrain/Walls/PlatformWalls/NorthWall"]
+size = Vector3(0.5, 5, 32)
+
+[node name="Door" type="CSGBox3D" parent="World/Terrain/Walls/PlatformWalls/NorthWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.707507, 0)
+operation = 2
+size = Vector3(1.6, 4, 2)
+
+[node name="CorridorWalls" type="Node3D" parent="World/Terrain/Walls"]
+
+[node name="WestWall" parent="World/Terrain/Walls/CorridorWalls" instance=ExtResource("3_he61m")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.75, 0, -32)
+
+[node name="EastWall" parent="World/Terrain/Walls/CorridorWalls" instance=ExtResource("3_he61m")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 3.75, 0, -32)
+
+[node name="NorthWall" type="CSGCombiner3D" parent="World/Terrain/Walls/CorridorWalls"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 2.5, -47.75)
+use_collision = true
+
+[node name="Wall" type="CSGBox3D" parent="World/Terrain/Walls/CorridorWalls/NorthWall"]
+size = Vector3(0.5, 5, 8)
+
+[node name="Door" type="CSGBox3D" parent="World/Terrain/Walls/CorridorWalls/NorthWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.707507, 0)
+operation = 2
+size = Vector3(1.6, 4, 2)
+
+[node name="Sols" type="Node3D" parent="World/Terrain"]
+
+[node name="Platform" parent="World/Terrain/Sols" node_paths=PackedStringArray("player_spawner") instance=ExtResource("2_2emca")]
+player_spawner = NodePath("../../../PlayerSpawner")
+
+[node name="Coridor" parent="World/Terrain/Sols" node_paths=PackedStringArray("player_spawner") instance=ExtResource("2_2emca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -32)
+player_spawner = NodePath("../../../PlayerSpawner")
+
+[node name="CollisionShape3D" parent="World/Terrain/Sols/Coridor" index="0"]
+shape = SubResource("BoxShape3D_8kuh5")
+
+[node name="MeshInstance3D" parent="World/Terrain/Sols/Coridor" index="1"]
+mesh = SubResource("PlaneMesh_dywrv")
+
+[node name="Obstacles" type="Node3D" parent="World/Terrain"]
+
+[node name="Boxes" type="Node3D" parent="World/Terrain/Obstacles"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.89504, 0, 0)
+
+[node name="Box" parent="World/Terrain/Obstacles/Boxes" instance=ExtResource("4_gmwb0")]
+transform = Transform3D(0.886107, 0, 0.463482, 0, 1, 0, -0.463482, 0, 0.886107, 1.13984, 0, 8.10065)
+
+[node name="Box3" parent="World/Terrain/Obstacles/Boxes" instance=ExtResource("4_gmwb0")]
+transform = Transform3D(0.886107, 0, 0.463482, 0, 1, 0, -0.463482, 0, 0.886107, 0.455441, 1.064, 8.5231)
+
+[node name="Box2" parent="World/Terrain/Obstacles/Boxes" instance=ExtResource("4_gmwb0")]
+transform = Transform3D(0.924013, 0, -0.382361, 0, 1, 0, 0.382361, 0, 0.924013, 0, 0, 8.91779)
 
 [node name="Players" type="Node3D" parent="World"]
 
@@ -65,6 +133,13 @@ _spawnable_scenes = PackedStringArray("res://scenes/ball/ball.tscn")
 spawn_path = NodePath("../Objects")
 script = ExtResource("4_bp5yb")
 
+[node name="MiniGame1" type="Node3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.606, 0, 0)
+
+[node name="map_blender_test" parent="World/MiniGame1" instance=ExtResource("6_g4cg7")]
+
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 64, 0)
 fov = 90.0
+
+[editable path="World/Terrain/Sols/Coridor"]

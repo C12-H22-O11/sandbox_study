@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://bp4mwr3c2m013"]
+
+[ext_resource type="Script" path="res://scenes/UI/chat_ui/chat_ui.gd" id="1_oxh1l"]
+
+[node name="ChatUI" type="PanelContainer" node_paths=PackedStringArray("chat_rich_text_label", "chat_message_line_edit")]
+size_flags_horizontal = 3
+script = ExtResource("1_oxh1l")
+chat_rich_text_label = NodePath("MarginContainer/VBoxContainer/ChatRichTextLabel")
+chat_message_line_edit = NodePath("MarginContainer/VBoxContainer/ChatMessageLineEdit")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ChatRichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+
+[node name="ChatMessageLineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = " Enter chat message here..."
+editable = false

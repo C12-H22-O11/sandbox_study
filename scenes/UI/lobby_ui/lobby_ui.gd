@@ -28,7 +28,7 @@ func clear() -> void:
 		child.queue_free()
 
 func update_member_count_label() -> void:
-	var member_count := Lobby.member_data.size()
+	var member_count := multiplayer.get_peers().size()
 	var member_limit := Lobby.lobby_data.get(Lobby.LobbyData.MEMBER_LIMIT, 4) as int
 	var member_count_str := "%s/%s" % [member_count, member_limit]
 	member_count_label.text = member_count_str

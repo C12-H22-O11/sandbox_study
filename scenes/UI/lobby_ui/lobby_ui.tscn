@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://pvhkqkqlgr3b"]
+
+[ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="1_whbkd"]
+
+[node name="LobbyUI" type="PanelContainer" node_paths=PackedStringArray("member_count_label", "member_container", "close_button")]
+custom_minimum_size = Vector2(300, 0)
+size_flags_vertical = 3
+script = ExtResource("1_whbkd")
+member_count_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MemberCountLabel")
+member_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/MemberContainer")
+close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LobbyLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Lobby"
+
+[node name="MemberCountLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+visible = false
+layout_mode = 2
+text = "0/2"
+horizontal_alignment = 2
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="MemberContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+disabled = true
+text = "Close / Leave"

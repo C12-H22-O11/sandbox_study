@@ -1,0 +1,70 @@
+[gd_scene load_steps=10 format=3 uid="uid://kop0l0v86hog"]
+
+[ext_resource type="Script" path="res://scenes/levels/spawning_platform.gd" id="1_g20d6"]
+[ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
+[ext_resource type="Script" path="res://scenes/levels/spawners/player_spawner.gd" id="3_e2ucm"]
+[ext_resource type="Script" path="res://scenes/levels/spawners/object_spawner.gd" id="4_bp5yb"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
+sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
+sky_horizon_color = Color(0.584509, 0.657199, 0.738509, 1)
+ground_bottom_color = Color(0.0989574, 0.165002, 0.275787, 1)
+ground_horizon_color = Color(0.584509, 0.657199, 0.738509, 1)
+
+[sub_resource type="Sky" id="Sky_2m55f"]
+sky_material = SubResource("ProceduralSkyMaterial_gcp2o")
+
+[sub_resource type="Environment" id="Environment_fmtno"]
+background_mode = 2
+sky = SubResource("Sky_2m55f")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_561iv"]
+size = Vector3(32, 1, 32)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6jpfk"]
+material = ExtResource("2_2oyl2")
+size = Vector2(32, 32)
+
+[node name="SandboxLevel" type="Node"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fmtno")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 5, 0)
+shadow_enabled = true
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="Terrain" type="Node3D" parent="World"]
+
+[node name="Platform" type="StaticBody3D" parent="World/Terrain" node_paths=PackedStringArray("player_spawner")]
+script = ExtResource("1_g20d6")
+player_spawner = NodePath("../../PlayerSpawner")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="World/Terrain/Platform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_561iv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Terrain/Platform"]
+mesh = SubResource("PlaneMesh_6jpfk")
+
+[node name="Players" type="Node3D" parent="World"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://scenes/player/player.tscn")
+spawn_path = NodePath("../Players")
+script = ExtResource("3_e2ucm")
+
+[node name="Objects" type="Node3D" parent="World"]
+
+[node name="ObjectSpawner" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://scenes/ball/ball.tscn")
+spawn_path = NodePath("../Objects")
+script = ExtResource("4_bp5yb")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)
+fov = 90.0

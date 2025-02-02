@@ -2,22 +2,41 @@ extends PanelContainer
 
 @export_category("Host")
 @export var host_port_spin_box: SpinBox
-@export var slots_spin_box: SpinBox
+@export var host_slots_spin_box: SpinBox
 @export var host_button: Button
 @export_category("Join")
-@export var ip_adress_line_edit: LineEdit
+@export var join_ip_line_edit: LineEdit
 @export var join_port_spin_box: SpinBox
 @export var join_button: Button
 
 
 func _ready() -> void:
+	setup()
 	Lobby.lobby_initialized.connect(_on_lobby_initialized)
 	Lobby.lobby_closed.connect(_on_lobby_closed)
+
+
+
+func setup() -> void:
+	host_port_spin_box.set_value_no_signal(Globals.e_net_settings.host_port)
+	host_port_spin_box.value_changed.connect(func(new_port: float) -> void: Globals.e_net_settings.host_port = int(new_port))
+	
+	host_slots_spin_box.set_value_no_signal(Globals.e_net_settings.host_slots)
+	host_slots_spin_box.value_changed.connect(func(new_slots: float) -> void: Globals.e_net_settings.host_slots = int(new_slots))
+	
+	
+	join_ip_line_edit.text = Globals.e_net_settings.join_ip
+	join_ip_line_edit.text_changed.connect(func(new_ip: String) ->void: Globals.e_net_settings.join_ip = new_ip)
+	
+	join_port_spin_box.set_value_no_signal(Globals.e_net_settings.join_port)
+	join_port_spin_box.value_changed.connect(func(new_port: float) -> void: Globals.e_net_settings.join_port = int(new_port))
+	
 	host_button.pressed.connect(_on_host_pressed)
 	join_button.pressed.connect(_on_join_pressed)
 
 
 #region Signal Functions
+
 
 func _on_lobby_initialized() -> void: 
 	hide()
@@ -26,13 +45,9 @@ func _on_lobby_closed() -> void:
 	show()
 
 func _on_host_pressed() -> void:
-	var port := int(host_port_spin_box.value)
-	var slots := int(slots_spin_box.value)
-	ENetNetwork.host(port, slots)
+	ENetNetwork.host()
 
 func _on_join_pressed() -> void:
-	var address := ip_adress_line_edit.text
-	var port := int(join_port_spin_box.value)
-	ENetNetwork.join(address, port)
+	ENetNetwork.join()
 
 #endregion

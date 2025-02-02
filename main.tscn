@@ -1,17 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://dn0tmptesmr8c"]
+[gd_scene load_steps=6 format=3 uid="uid://dn0tmptesmr8c"]
 
-[ext_resource type="Script" path="res://scenes/UI/network_ui/network_ui.gd" id="1_315m2"]
-[ext_resource type="Script" path="res://scenes/UI/user_data_ui/user_data_ui.gd" id="1_fus6c"]
-[ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="1_ss22t"]
-[ext_resource type="Script" path="res://scenes/UI/chat_ui/chat_ui.gd" id="4_munrg"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_lq2cr"]
-size = Vector2(0, 0)
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0q1wm"]
-size = Vector2(0, 0)
+[ext_resource type="Script" path="res://scenes/levels/spawners/level_spawner.gd" id="1_6uque"]
+[ext_resource type="PackedScene" uid="uid://bmowo38idccga" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="2_rbfoh"]
+[ext_resource type="PackedScene" uid="uid://pvhkqkqlgr3b" path="res://scenes/UI/lobby_ui/lobby_ui.tscn" id="4_8x48o"]
+[ext_resource type="PackedScene" uid="uid://0ov0b4ebb6sl" path="res://scenes/UI/network_ui/network_ui.tscn" id="4_pst6q"]
+[ext_resource type="PackedScene" uid="uid://bp4mwr3c2m013" path="res://scenes/UI/chat_ui/chat_ui.tscn" id="5_acriv"]
 
 [node name="Main" type="Node"]
+
+[node name="Level" type="Node" parent="."]
+
+[node name="LevelSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Level")
+spawn_limit = 1
+script = ExtResource("1_6uque")
 
 [node name="Menu" type="Control" parent="."]
 layout_mode = 3
@@ -20,6 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="Menu"]
 layout_mode = 1
@@ -33,192 +36,29 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer"]
+[node name="NetworkUI" parent="Menu/MarginContainer" instance=ExtResource("4_pst6q")]
 layout_mode = 2
 size_flags_horizontal = 0
-alignment = 2
+size_flags_vertical = 0
 
-[node name="UserDataUI" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("user_name_line_edit", "user_color_picker_button")]
+[node name="UserDataUI" parent="Menu/MarginContainer" instance=ExtResource("2_rbfoh")]
 layout_mode = 2
-script = ExtResource("1_fus6c")
-user_name_line_edit = NodePath("UserNameLineEdit")
-user_color_picker_button = NodePath("UserColorPickerButton")
+size_flags_horizontal = 8
+size_flags_vertical = 0
 
-[node name="UserNameLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/UserDataUI"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "User name..."
+[node name="UserNameLineEdit" parent="Menu/MarginContainer/UserDataUI" index="0"]
+custom_minimum_size = Vector2(250, 0)
 
-[node name="UserColorPickerButton" type="ColorPickerButton" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/UserDataUI"]
-custom_minimum_size = Vector2(50, 0)
+[node name="LobbyUI" parent="Menu/MarginContainer" instance=ExtResource("4_8x48o")]
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 10
 
-[node name="LobbyUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("member_count_label", "member_container", "close_button")]
-custom_minimum_size = Vector2(300, 0)
+[node name="ChatUI" parent="Menu/MarginContainer" instance=ExtResource("5_acriv")]
+custom_minimum_size = Vector2(300, 300)
 layout_mode = 2
-size_flags_vertical = 3
-script = ExtResource("1_ss22t")
-member_count_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MemberCountLabel")
-member_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/MemberContainer")
-close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
+size_flags_horizontal = 10
+size_flags_vertical = 8
 
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="LobbyLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Lobby"
-
-[node name="MemberCountLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "0/2"
-horizontal_alignment = 2
-
-[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 4
-theme_override_constants/margin_top = 4
-theme_override_constants/margin_right = 4
-theme_override_constants/margin_bottom = 4
-
-[node name="MemberContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="CloseButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/LobbyUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-disabled = true
-text = "Close / Leave"
-
-[node name="NetworkUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer" node_paths=PackedStringArray("host_port_spin_box", "slots_spin_box", "host_button", "ip_adress_line_edit", "join_port_spin_box", "join_button")]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-script = ExtResource("1_315m2")
-host_port_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/PortSpinBox")
-slots_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/SlotsSpinBox")
-host_button = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host/HostButton")
-ip_adress_line_edit = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/IPLineEdit")
-join_port_spin_box = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/PortSpinBox")
-join_button = NodePath("MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join/JoinButton")
-
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="IPLabel" type="Label" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-text = "ENet Networking"
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Host" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_lq2cr")
-max_value = 65653.0
-value = 25565.0
-prefix = "Port :"
-
-[node name="SlotsSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_0q1wm")
-min_value = 2.0
-max_value = 32.0
-value = 2.0
-prefix = "Slots :"
-
-[node name="HostButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Host"]
-layout_mode = 2
-text = "Host"
-
-[node name="VSeparator" type="VSeparator" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Join" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="IPLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "localhost"
-placeholder_text = "IP Address"
-
-[node name="PortSpinBox" type="SpinBox" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
-layout_mode = 2
-theme_override_icons/updown = SubResource("PlaceholderTexture2D_lq2cr")
-max_value = 65653.0
-value = 25565.0
-prefix = "Port :"
-
-[node name="JoinButton" type="Button" parent="Menu/MarginContainer/HBoxContainer/VBoxContainer/NetworkUI/MarginContainer/VBoxContainer/VBoxContainer/HBoxContainer/Join"]
-layout_mode = 2
-text = "Join"
-
-[node name="ChatUI" type="PanelContainer" parent="Menu/MarginContainer/HBoxContainer" node_paths=PackedStringArray("chat_rich_text_label", "chat_message_line_edit")]
-layout_mode = 2
-size_flags_horizontal = 3
-script = ExtResource("4_munrg")
-chat_rich_text_label = NodePath("MarginContainer/VBoxContainer/ChatRichTextLabel")
-chat_message_line_edit = NodePath("MarginContainer/VBoxContainer/ChatMessageLineEdit")
-
-[node name="MarginContainer" type="MarginContainer" parent="Menu/MarginContainer/HBoxContainer/ChatUI"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer"]
-layout_mode = 2
-
-[node name="ChatRichTextLabel" type="RichTextLabel" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-bbcode_enabled = true
-
-[node name="ChatMessageLineEdit" type="LineEdit" parent="Menu/MarginContainer/HBoxContainer/ChatUI/MarginContainer/VBoxContainer"]
-layout_mode = 2
-placeholder_text = " Enter chat message here..."
-editable = false
+[editable path="Menu/MarginContainer/UserDataUI"]

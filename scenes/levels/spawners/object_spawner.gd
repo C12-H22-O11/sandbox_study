@@ -1,6 +1,6 @@
 extends MultiplayerSpawner
 
-const BALL_SCENE := preload("res://scenes/levels/ball/ball.tscn")
+const BALL_SCENE := preload("res://scenes/ball/ball.tscn")
 
 func _ready() -> void:
 	spawn_function = spawn_object
@@ -20,3 +20,7 @@ func spawn_object(data := {}) -> Node:
 	print("Spawning %s at %s" % [ball_instance.name, position])
 	ball_instance.position = position
 	return ball_instance
+
+@rpc("any_peer", "call_local", "reliable")
+func request_spawn(data: Dictionary) -> void:
+	spawn(data)

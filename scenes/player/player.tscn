@@ -1,12 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://8x27mf3mb8sd"]
+[gd_scene load_steps=9 format=3 uid="uid://8x27mf3mb8sd"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_n0sd2"]
+[ext_resource type="Script" path="res://scenes/player/visuals.gd" id="2_617xy"]
+[ext_resource type="Script" path="res://scenes/player/input_synchronizer.gd" id="2_u1ibf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_m7lne"]
-radius = 0.3
-height = 1.8
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_lrxlb"]
 radius = 0.3
 height = 1.8
 
@@ -18,23 +16,51 @@ properties/1/path = NodePath(".:velo")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("head", "camera")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5glxq"]
+properties/0/path = NodePath("InputSynchronizer:input_direction")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rluch"]
+properties/0/path = NodePath(".:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lrxlb"]
+radius = 0.3
+height = 1.8
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("input", "visuals", "head", "camera")]
 script = ExtResource("1_n0sd2")
-head = NodePath("Head")
-camera = NodePath("Head/Camera3D")
+input = NodePath("InputSynchronizer")
+visuals = NodePath("Visuals")
+head = NodePath("Visuals/Head")
+camera = NodePath("Visuals/Head/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_m7lne")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_y6ycm")
+
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_5glxq")
+script = ExtResource("2_u1ibf")
+
+[node name="Visuals" type="Node3D" parent="." node_paths=PackedStringArray("head")]
+script = ExtResource("2_617xy")
+head = NodePath("Head")
+
+[node name="VisualSynchronizer" type="MultiplayerSynchronizer" parent="Visuals"]
+replication_config = SubResource("SceneReplicationConfig_rluch")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_lrxlb")
+skeleton = NodePath("../..")
 
-[node name="Head" type="Node3D" parent="."]
+[node name="Head" type="Node3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Head"]
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_y6ycm")
+[node name="Camera3D" type="Camera3D" parent="Visuals/Head"]

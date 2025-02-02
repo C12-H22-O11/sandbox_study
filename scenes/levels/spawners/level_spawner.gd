@@ -1,6 +1,6 @@
 extends MultiplayerSpawner
 
-const SANDBOX_LEVEL := preload("res://scenes/levels/sandbox_level.tscn")
+const SANDBOX_LEVEL := preload("res://scenes/levels/sandbox_level/sandbox_level.tscn")
 
 
 func _ready() -> void:

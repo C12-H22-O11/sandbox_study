@@ -1,8 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://8x27mf3mb8sd"]
+[gd_scene load_steps=16 format=3 uid="uid://8x27mf3mb8sd"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_n0sd2"]
 [ext_resource type="Script" path="res://scenes/player/visuals.gd" id="2_617xy"]
 [ext_resource type="Script" path="res://scenes/player/input_synchronizer.gd" id="2_u1ibf"]
+[ext_resource type="Script" path="res://scenes/state_machine/state_machine.gd" id="4_b3wt3"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/idle.gd" id="5_bt5ev"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/jumping.gd" id="6_0aska"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/falling.gd" id="7_p4ih0"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/landing.gd" id="8_laj8x"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/walking.gd" id="8_p7jhi"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/running.gd" id="10_6pxe5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_m7lne"]
 radius = 0.3
@@ -20,6 +27,12 @@ properties/1/replication_mode = 1
 properties/0/path = NodePath("InputSynchronizer:input_direction")
 properties/0/spawn = true
 properties/0/replication_mode = 1
+properties/1/path = NodePath("InputSynchronizer:pressing_jump")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("InputSynchronizer:pressing_run")
+properties/2/spawn = true
+properties/2/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rluch"]
 properties/0/path = NodePath(".:rotation")
@@ -64,3 +77,30 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Visuals/Head"]
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state", "state_label")]
+script = ExtResource("4_b3wt3")
+current_state = NodePath("Idle")
+state_label = NodePath("../StateLabel")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_bt5ev")
+
+[node name="Jumping" type="Node" parent="StateMachine"]
+script = ExtResource("6_0aska")
+
+[node name="Falling" type="Node" parent="StateMachine"]
+script = ExtResource("7_p4ih0")
+
+[node name="Landing" type="Node" parent="StateMachine"]
+script = ExtResource("8_laj8x")
+
+[node name="Walking" type="Node" parent="StateMachine"]
+script = ExtResource("8_p7jhi")
+
+[node name="Running" type="Node" parent="StateMachine"]
+script = ExtResource("10_6pxe5")
+
+[node name="StateLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0

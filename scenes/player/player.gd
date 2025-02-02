@@ -5,8 +5,14 @@ const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 const ACCELERATION = 15
 const DECELERATION = 20
+
 @export var head: Node3D 
 @export var camera: Camera3D 
+@export var velo: Vector3: 
+	set(value):
+		velocity = value
+	get:
+		return velocity
 
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority(): 
@@ -38,12 +44,17 @@ func _physics_process(delta: float) -> void:
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	#var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction := input_dir.rotated(-rotation.y)
+	
+	var planar_velocity := Vector2(velocity.x, velocity.z)
+	
 	if direction:
-		velocity.x = move_toward(velocity.x, direction.x * SPEED, ACCELERATION * delta)
-		velocity.z = move_toward(velocity.z, direction.z * SPEED, ACCELERATION * delta)
+		planar_velocity =  planar_velocity.move_toward(direction* SPEED, ACCELERATION * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, DECELERATION * delta )
-		velocity.z = move_toward(velocity.z, 0, DECELERATION * delta)
-
+		planar_velocity =  planar_velocity.move_toward(Vector2.ZERO, DECELERATION * delta)
+	
+	velocity.x = planar_velocity.x
+	velocity.z = planar_velocity.y
+	
 	move_and_slide()

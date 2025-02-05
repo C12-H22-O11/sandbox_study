@@ -8,13 +8,13 @@ func _ready() -> void:
 	Lobby.lobby_initialized.connect(_on_lobby_initialized)
 
 
-func spawn_level(_data = null) -> Node:
+func spawn_level(_data: Dictionary = {}) -> Node:
 	return SANDBOX_LEVEL.instantiate()
 
 
 func _on_lobby_initialized() -> void:
 	if Lobby.is_owner:
-		spawn()
+		spawn({})
 
 func _on_lobby_closed() -> void:
 	for child in get_node(spawn_path).get_children():

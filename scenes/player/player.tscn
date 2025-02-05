@@ -1,8 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://8x27mf3mb8sd"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_n0sd2"]
-[ext_resource type="Script" path="res://scenes/player/visuals.gd" id="2_617xy"]
-[ext_resource type="Script" path="res://scenes/player/input_synchronizer.gd" id="2_u1ibf"]
+[ext_resource type="Script" path="res://scenes/player/player_visuals.gd" id="2_617xy"]
 [ext_resource type="Script" path="res://scenes/state_machine/state_machine.gd" id="4_b3wt3"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/idle.gd" id="5_bt5ev"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/jumping.gd" id="6_0aska"]
@@ -10,12 +9,48 @@
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/landing.gd" id="8_laj8x"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/walking.gd" id="8_p7jhi"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/running.gd" id="10_6pxe5"]
+[ext_resource type="PackedScene" uid="uid://bl8ccfl5hsxt7" path="res://scenes/input_synchronizer/input_synchronizer.tscn" id="10_yxmt4"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/flying.gd" id="11_fufu1"]
-[ext_resource type="Script" path="res://scenes/player/player_debug_panel.gd" id="12_t1jp7"]
+[ext_resource type="Script" path="res://scenes/player/player_debug_panel/player_debug_panel.gd" id="12_t1jp7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_m7lne"]
 radius = 0.3
 height = 1.8
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rluch"]
+properties/0/path = NodePath(".:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("Head:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_lrxlb"]
+radius = 0.3
+height = 1.8
+
+[sub_resource type="GDScript" id="GDScript_qc8sh"]
+script/source = "extends RayCast3D
+
+@export var input_synchronizer: InputSynchronizer
+
+
+func _physics_process(_delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+	
+	if input_synchronizer.is_action_pressed(\"interact\"):
+		var interactable_area := get_interactable_area()
+		if interactable_area:
+			interactable_area.interact(null)
+
+
+func get_interactable_area() -> InteractAreaComponent:
+	var collider := get_collider()
+	if collider and collider is InteractAreaComponent:
+		return collider as InteractAreaComponent
+	return null
+"
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y6ycm"]
 properties/0/path = NodePath(".:position")
@@ -25,37 +60,72 @@ properties/1/path = NodePath(".:velo")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5glxq"]
-properties/0/path = NodePath("InputSynchronizer:input_direction")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath("InputSynchronizer:pressing_jump")
-properties/1/spawn = true
-properties/1/replication_mode = 2
-properties/2/path = NodePath("InputSynchronizer:pressing_run")
-properties/2/spawn = true
-properties/2/replication_mode = 2
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rluch"]
-properties/0/path = NodePath(".:rotation")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_lrxlb"]
-radius = 0.3
-height = 1.8
-
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("input", "visuals", "label", "head", "camera")]
 script = ExtResource("1_n0sd2")
 input = NodePath("InputSynchronizer")
-visuals = NodePath("Visuals")
-label = NodePath("Visuals/Label3D")
-head = NodePath("Visuals/Head")
-camera = NodePath("Visuals/Head/Camera3D")
+visuals = NodePath("PlayerVisuals")
+label = NodePath("PlayerVisuals/Label3D")
+head = NodePath("PlayerVisuals/Head")
+camera = NodePath("PlayerVisuals/Head/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_m7lne")
+
+[node name="PlayerVisuals" type="Node3D" parent="." node_paths=PackedStringArray("head")]
+script = ExtResource("2_617xy")
+head = NodePath("Head")
+
+[node name="VisualSynchronizer" type="MultiplayerSynchronizer" parent="PlayerVisuals"]
+replication_config = SubResource("SceneReplicationConfig_rluch")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_lrxlb")
+skeleton = NodePath("../..")
+
+[node name="Head" type="Node3D" parent="PlayerVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.34453, 1.73957)
+
+[node name="Camera3D" type="Camera3D" parent="PlayerVisuals/Head"]
+
+[node name="InteractionRayCast3D" type="RayCast3D" parent="PlayerVisuals/Head" node_paths=PackedStringArray("input_synchronizer")]
+target_position = Vector3(0, 0, -2)
+collide_with_areas = true
+collide_with_bodies = false
+script = SubResource("GDScript_qc8sh")
+input_synchronizer = NodePath("../../../InputSynchronizer")
+
+[node name="Label3D" type="Label3D" parent="PlayerVisuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+visible = false
+billboard = 1
+double_sided = false
+text = "Player"
+
+[node name="PlayerDebugPanel" type="PanelContainer" parent="PlayerVisuals" node_paths=PackedStringArray("player", "state_machine", "current_state_label")]
+visible = false
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 142.0
+offset_bottom = 47.0
+script = ExtResource("12_t1jp7")
+player = NodePath("../..")
+state_machine = NodePath("../../StateMachine")
+current_state_label = NodePath("MarginContainer/GridContainer/CurrentState")
+
+[node name="MarginContainer" type="MarginContainer" parent="PlayerVisuals/PlayerDebugPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="GridContainer" type="GridContainer" parent="PlayerVisuals/PlayerDebugPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="CurrentState" type="Label" parent="PlayerVisuals/PlayerDebugPanel/MarginContainer/GridContainer"]
+layout_mode = 2
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
 script = ExtResource("4_b3wt3")
@@ -75,6 +145,7 @@ script = ExtResource("8_laj8x")
 
 [node name="Walking" type="Node" parent="StateMachine"]
 script = ExtResource("8_p7jhi")
+speed = 2.0
 
 [node name="Running" type="Node" parent="StateMachine"]
 script = ExtResource("10_6pxe5")
@@ -85,52 +156,4 @@ script = ExtResource("11_fufu1")
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_y6ycm")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_5glxq")
-script = ExtResource("2_u1ibf")
-
-[node name="Visuals" type="Node3D" parent="." node_paths=PackedStringArray("head")]
-script = ExtResource("2_617xy")
-head = NodePath("Head")
-
-[node name="VisualSynchronizer" type="MultiplayerSynchronizer" parent="Visuals"]
-replication_config = SubResource("SceneReplicationConfig_rluch")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_lrxlb")
-skeleton = NodePath("../..")
-
-[node name="Head" type="Node3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-
-[node name="Camera3D" type="Camera3D" parent="Visuals/Head"]
-
-[node name="Label3D" type="Label3D" parent="Visuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-billboard = 1
-double_sided = false
-text = "Player"
-
-[node name="PlayerDebugPanel" type="PanelContainer" parent="." node_paths=PackedStringArray("player", "state_machine", "current_state_label")]
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 142.0
-offset_bottom = 47.0
-script = ExtResource("12_t1jp7")
-player = NodePath("..")
-state_machine = NodePath("../StateMachine")
-current_state_label = NodePath("MarginContainer/GridContainer/CurrentState")
-
-[node name="MarginContainer" type="MarginContainer" parent="PlayerDebugPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="GridContainer" type="GridContainer" parent="PlayerDebugPanel/MarginContainer"]
-layout_mode = 2
-
-[node name="CurrentState" type="Label" parent="PlayerDebugPanel/MarginContainer/GridContainer"]
-layout_mode = 2
+[node name="InputSynchronizer" parent="." instance=ExtResource("10_yxmt4")]

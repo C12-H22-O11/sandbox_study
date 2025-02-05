@@ -1,14 +1,13 @@
 [gd_scene load_steps=2 format=3 uid="uid://pvhkqkqlgr3b"]
 
-[ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="1_whbkd"]
+[ext_resource type="Script" path="res://scenes/UI/lobby_list_ui/lobby_list_ui.gd" id="1_whbkd"]
 
-[node name="LobbyUI" type="PanelContainer" node_paths=PackedStringArray("member_count_label", "member_container", "close_button")]
+[node name="LobbyListUI" type="PanelContainer" node_paths=PackedStringArray("member_count_label", "member_container")]
 custom_minimum_size = Vector2(300, 0)
 size_flags_vertical = 3
 script = ExtResource("1_whbkd")
 member_count_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MemberCountLabel")
 member_container = NodePath("MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/MemberContainer")
-close_button = NodePath("MarginContainer/VBoxContainer/CloseButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -27,6 +26,8 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Lobby"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MemberCountLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 visible = false

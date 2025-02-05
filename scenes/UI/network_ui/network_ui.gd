@@ -12,9 +12,6 @@ extends PanelContainer
 
 func _ready() -> void:
 	setup()
-	Lobby.lobby_initialized.connect(_on_lobby_initialized)
-	Lobby.lobby_closed.connect(_on_lobby_closed)
-
 
 
 func setup() -> void:
@@ -36,13 +33,6 @@ func setup() -> void:
 
 
 #region Signal Functions
-
-
-func _on_lobby_initialized() -> void: 
-	hide()
-
-func _on_lobby_closed() -> void:
-	show()
 
 func _on_host_pressed() -> void:
 	ENetNetwork.host()

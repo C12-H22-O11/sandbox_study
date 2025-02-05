@@ -7,6 +7,9 @@ extends PanelContainer
 
 
 func _ready() -> void:
+	if player.owner_id != multiplayer.get_unique_id():
+		self.queue_free()
+		
 	state_machine.transitioned.connect(_on_state_transitioned)
 
 func _on_state_transitioned(from: State, to: State) -> void:

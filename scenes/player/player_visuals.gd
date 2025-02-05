@@ -6,13 +6,16 @@ extends Node3D
 @onready var previous_velocity := (owner as CharacterBody3D).velocity
 
 
-
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
+	
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+	
 	if event is InputEventMouseMotion:
 		var mouse_input := -Vector2(deg_to_rad(event.relative.x), deg_to_rad(event.relative.y))
-		mouse_input *= 0.3
+		mouse_input *= 0.2
 		rotate_y(mouse_input.x)
 		head.rotation.x = clampf(head.rotation.x+mouse_input.y, -TAU/4, TAU/4)
 

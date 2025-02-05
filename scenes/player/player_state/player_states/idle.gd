@@ -1,22 +1,19 @@
 extends PlayerState
 
 
-func enter(from: State = null) -> void:
+func enter(_from: State = null) -> void:
 	player.velocity = Vector3.ZERO
 
 
-func update(delta: float) -> void:
-	pass
-
-func physics_update(delta: float) -> void:
+func physics_update(_delta: float) -> void:
 	if player.is_on_floor():
-		if player.input.pressing_jump:
+		if player.input.is_action_pressed("jump"):
 			state_machine.transition("Jumping")
 	else:
 		state_machine.transition("Falling")
 	
 	if not player.input.input_direction.is_zero_approx():
-		if Input.is_action_pressed("run"):
+		if player.input.is_action_pressed("run"):
 			state_machine.transition("Running")
 		else:
 			state_machine.transition("Walking")

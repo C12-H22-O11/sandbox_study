@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://d4lgg11r867ad"]
+
+[ext_resource type="Script" path="res://scenes/levels/sandbox_level/button_3d.gd" id="1_mpd6s"]
+[ext_resource type="Script" path="res://components/interact_area_component/interact_area_component.gd" id="2_avnqj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gdwys"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hcor"]
+albedo_color = Color(0.366595, 0.366595, 0.366595, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vvsuf"]
+material = SubResource("StandardMaterial3D_2hcor")
+size = Vector3(0.2, 0.05, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3n1tm"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0qqcv"]
+material = SubResource("StandardMaterial3D_3n1tm")
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.1
+radial_segments = 16
+rings = 0
+
+[node name="Button3D" type="Node3D" node_paths=PackedStringArray("interact_area_component", "timer", "button_mesh")]
+script = ExtResource("1_mpd6s")
+interact_area_component = NodePath("InteractAreaComponent")
+timer = NodePath("ButtonTimer")
+button_mesh = NodePath("ButtonMesh")
+
+[node name="InteractAreaComponent" type="Area3D" parent="."]
+script = ExtResource("2_avnqj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractAreaComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+shape = SubResource("BoxShape3D_gdwys")
+
+[node name="ButtonTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="ButtonBase" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00162393, 0.025, 0)
+mesh = SubResource("BoxMesh_vvsuf")
+skeleton = NodePath("")
+
+[node name="ButtonMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("CylinderMesh_0qqcv")
+skeleton = NodePath("")

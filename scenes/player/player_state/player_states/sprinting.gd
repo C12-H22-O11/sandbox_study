@@ -1,8 +1,8 @@
 extends PlayerState
 
-@export var speed := 4.0
+@export var speed := 7.0
 @export var acceleration := 20.0
-@export var deceleration := 25.0
+@export var deceleration := 20.0
 
 
 func physics_update(delta: float) -> void:
@@ -17,7 +17,7 @@ func physics_update(delta: float) -> void:
 	if player.get_planar_velocity().is_zero_approx():
 		state_machine.transition("Idle")
 	
-	if player.input.is_action_pressed("sprint"):
-		state_machine.transition("Sprinting")
+	if not player.input.is_action_pressed("sprint"):
+		state_machine.transition("Running")
 	
 	player.move_and_slide()

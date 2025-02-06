@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://8x27mf3mb8sd"]
+[gd_scene load_steps=19 format=3 uid="uid://8x27mf3mb8sd"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_n0sd2"]
 [ext_resource type="Script" path="res://scenes/player/player_visuals.gd" id="2_617xy"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/walking.gd" id="8_p7jhi"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/running.gd" id="10_6pxe5"]
 [ext_resource type="PackedScene" uid="uid://bl8ccfl5hsxt7" path="res://scenes/input_synchronizer/input_synchronizer.tscn" id="10_yxmt4"]
+[ext_resource type="Script" path="res://scenes/player/player_state/player_states/sprinting.gd" id="11_4011x"]
 [ext_resource type="Script" path="res://scenes/player/player_state/player_states/flying.gd" id="11_fufu1"]
 [ext_resource type="Script" path="res://scenes/player/player_debug_panel/player_debug_panel.gd" id="12_t1jp7"]
 
@@ -85,7 +86,7 @@ mesh = SubResource("CapsuleMesh_lrxlb")
 skeleton = NodePath("../..")
 
 [node name="Head" type="Node3D" parent="PlayerVisuals"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.34453, 1.73957)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="PlayerVisuals/Head"]
 
@@ -145,10 +146,12 @@ script = ExtResource("8_laj8x")
 
 [node name="Walking" type="Node" parent="StateMachine"]
 script = ExtResource("8_p7jhi")
-speed = 2.0
 
 [node name="Running" type="Node" parent="StateMachine"]
 script = ExtResource("10_6pxe5")
+
+[node name="Sprinting" type="Node" parent="StateMachine"]
+script = ExtResource("11_4011x")
 
 [node name="Flying" type="Node" parent="StateMachine"]
 script = ExtResource("11_fufu1")

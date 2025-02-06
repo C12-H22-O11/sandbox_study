@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=20 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -33,6 +33,52 @@ size = Vector3(8, 1, 32)
 [sub_resource type="PlaneMesh" id="PlaneMesh_dywrv"]
 material = ExtResource("2_2oyl2")
 size = Vector2(8, 32)
+
+[sub_resource type="GDScript" id="GDScript_0cmyg"]
+script/source = "extends AnimatableBody3D
+@export var buttons: Array[Button3D]
+@export var time: float = 2
+@export var travel := Vector3.UP
+@onready var start_position := self.position 
+var opened := false
+var tween: Tween = null
+
+func _ready() -> void:
+	for button in buttons:
+		button.just_pressed.connect(_on_button_just_pressed)
+	
+
+func _on_button_just_pressed() -> void:
+	request_door.rpc_id(1)
+	
+func tween_position() -> void:
+	if tween and tween.is_running():
+		tween.stop()
+	tween = create_tween()
+	if opened:
+		tween.tween_property(self, \"position\", start_position + travel, time * (1-get_factor()))\\
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	else:
+		tween.tween_property(self, \"position\", start_position, time * get_factor())\\
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		
+func get_factor() -> float:
+	return inverse_lerp(start_position.x, (travel + start_position).x, position.x)
+	
+@rpc(\"call_local\", \"any_peer\", \"reliable\")
+func request_door() -> void:
+	send_door.rpc(opened)
+	
+
+@rpc(\"call_local\", \"authority\", \"reliable\")
+func send_door(door_state: bool) -> void:
+	opened = !door_state
+	tween_position()
+	
+	
+
+	
+"
 
 [sub_resource type="BoxMesh" id="BoxMesh_4qucd"]
 size = Vector3(0.2, 3.5, 2)
@@ -149,8 +195,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.606, 0, 0)
 [node name="Button3D" parent="World" instance=ExtResource("8_tvxxh")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.25, 1.25, -15.5)
 
-[node name="Door" type="AnimatableBody3D" parent="World"]
+[node name="Button3D2" parent="World" instance=ExtResource("8_tvxxh")]
+transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -1.25, 1.25, -16)
+
+[node name="Door" type="AnimatableBody3D" parent="World" node_paths=PackedStringArray("buttons")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -15.75)
+script = SubResource("GDScript_0cmyg")
+buttons = [NodePath("../Button3D"), NodePath("../Button3D2")]
+travel = Vector3(1.6, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Door"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)

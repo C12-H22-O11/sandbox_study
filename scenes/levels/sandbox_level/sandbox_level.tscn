@@ -46,7 +46,6 @@ var tween: Tween = null
 func _ready() -> void:
 	for button in buttons:
 		button.just_pressed.connect(_on_button_just_pressed)
-	
 
 func _on_button_just_pressed() -> void:
 	request_door.rpc_id(1)

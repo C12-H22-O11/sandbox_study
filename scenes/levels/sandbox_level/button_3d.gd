@@ -4,6 +4,8 @@ signal just_pressed
 signal just_released
 
 @export var interact_area_component: InteractAreaComponent
+@export var random_audio_component: RandomAudioComponent 
+
 @export var timer: Timer
 @export var button_mesh: MeshInstance3D
 
@@ -12,6 +14,10 @@ var pressed := false
 var tween: Tween
 
 func _ready() -> void:
+	setup()
+
+
+func setup() -> void:
 	interact_area_component.interaction.connect(_on_interaction)
 	timer.timeout.connect(_on_timeout)
 	just_pressed.connect(_on_just_pressed)
@@ -24,6 +30,9 @@ func press() -> void:
 		just_pressed.emit()
 	timer.start()
 
+func play_sound() -> void:
+	if random_audio_component != null:
+		random_audio_component.play_random()
 
 func _on_interaction(from: Player) -> void:
 	press()
@@ -33,12 +42,16 @@ func _on_timeout() -> void:
 	just_released.emit()
 
 func _on_just_pressed() -> void:
+	play_sound()
+	
 	if tween and tween.is_running():
 		tween.stop()
 	tween = create_tween()
 	tween.tween_property(button_mesh, "position", Vector3.UP * .025, 0.05).set_ease(Tween.EASE_IN_OUT)
 
 func _on_just_released() -> void:
+	play_sound()
+	
 	if tween and tween.is_running():
 		tween.stop()
 	tween = create_tween()

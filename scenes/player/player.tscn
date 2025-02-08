@@ -105,7 +105,6 @@ double_sided = false
 text = "Player"
 
 [node name="PlayerDebugPanel" type="PanelContainer" parent="PlayerVisuals" node_paths=PackedStringArray("player", "state_machine", "current_state_label")]
-visible = false
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 142.0

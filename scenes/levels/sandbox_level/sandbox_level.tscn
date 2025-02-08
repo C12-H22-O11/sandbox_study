@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=26 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -10,7 +10,13 @@
 [ext_resource type="PackedScene" uid="uid://bmowo38idccga" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="8_2vpun"]
 [ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="8_6kg30"]
 [ext_resource type="PackedScene" uid="uid://d4lgg11r867ad" path="res://scenes/button_3d/button_3d.tscn" id="8_tvxxh"]
+[ext_resource type="Script" path="res://components/random_audio_component/random_audio_component.gd" id="9_05ho3"]
 [ext_resource type="PackedScene" uid="uid://pvhkqkqlgr3b" path="res://scenes/UI/lobby_list_ui/lobby_list_ui.tscn" id="9_uk6yc"]
+[ext_resource type="AudioStream" uid="uid://be4hhnho850al" path="res://assets/sfx/button/button assorted 36.wav" id="10_d303m"]
+[ext_resource type="AudioStream" uid="uid://dnfx1h0oojpeo" path="res://assets/sfx/button/button assorted 37.wav" id="11_olnvd"]
+[ext_resource type="AudioStream" uid="uid://duqgmd2rpc4qg" path="res://assets/sfx/button/button assorted 38.wav" id="12_8fxjr"]
+[ext_resource type="AudioStream" uid="uid://xo82f12alxi1" path="res://assets/sfx/button/button assorted 39.wav" id="13_4ur2u"]
+[ext_resource type="AudioStream" uid="uid://bqpk28rhqt5er" path="res://assets/sfx/button/button assorted 40.wav" id="14_d05wb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -192,11 +198,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.606, 0, 0)
 
 [node name="map_blender_test" parent="World/MiniGame1" instance=ExtResource("6_g4cg7")]
 
-[node name="Button3D" parent="World" instance=ExtResource("8_tvxxh")]
+[node name="Button3D" parent="World" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.25, 1.25, -15.5)
+random_audio_component = NodePath("RandomAudioComponent")
 
-[node name="Button3D2" parent="World" instance=ExtResource("8_tvxxh")]
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Button3D"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
+
+[node name="Button3D2" parent="World" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -1.25, 1.25, -16)
+random_audio_component = NodePath("RandomAudioComponent")
+
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Button3D2"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
 
 [node name="Door" type="AnimatableBody3D" parent="World" node_paths=PackedStringArray("buttons")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -15.75)

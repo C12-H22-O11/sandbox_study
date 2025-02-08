@@ -19,5 +19,7 @@ func physics_update(delta: float) -> void:
 	
 	if player.input.is_action_pressed("sprint"):
 		state_machine.transition("Sprinting")
+	elif player.input.is_action_pressed("walk"):
+		state_machine.transition("Walking")
 	
 	player.move_and_slide()

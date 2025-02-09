@@ -23,6 +23,7 @@ boot_splash/minimum_display_time=1000
 Globals="*res://autoloads/globals.gd"
 ENetNetwork="*res://autoloads/e_net_network.gd"
 Lobby="*res://autoloads/lobby.gd"
+Math="*res://autoloads/math.gd"
 
 [debug]
 

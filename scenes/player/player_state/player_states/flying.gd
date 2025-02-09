@@ -4,13 +4,14 @@ extends PlayerState
 @export var acceleration: float
 @export var deceleration: float
 
+var previous_state: State = null
 
 func enter(from: State = null) -> void:
-	pass
+	previous_state = from
 
 func physics_update(delta: float) -> void:
 	player.apply_movement(
-		player.input.get_rotated_planar_input(Vector3.UP),
+		player.input.get_planar_input(Vector3.UP),
 		speed, 
 		acceleration,
 		deceleration,

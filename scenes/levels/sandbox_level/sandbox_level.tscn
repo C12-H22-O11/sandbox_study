@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://b4gmmr676xj15" path="res://scenes/terrain/wall.tscn" id="3_he61m"]
 [ext_resource type="Script" path="res://scenes/spawners/object_spawner.gd" id="4_bp5yb"]
 [ext_resource type="PackedScene" uid="uid://q4h774jjxk8l" path="res://scenes/terrain/box.tscn" id="4_gmwb0"]
-[ext_resource type="PackedScene" uid="uid://cgs56483cegp6" path="res://scenes/lever_3d/lever_3d.tscn" id="5_wof0i"]
 [ext_resource type="PackedScene" uid="uid://p1uhdnevjeuo" path="res://assets/models/map_blender_test/map_blender_test.glb" id="6_g4cg7"]
+[ext_resource type="Script" path="res://scripts/elevator_3d/elevator_floor_3d.gd" id="6_h2c6w"]
 [ext_resource type="PackedScene" uid="uid://pgdabagp50qn" path="res://scenes/elevator_3d/elevator.tscn" id="6_vwn7c"]
 [ext_resource type="PackedScene" uid="uid://bmowo38idccga" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="8_2vpun"]
 [ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="8_6kg30"]
@@ -141,20 +141,54 @@ transform = Transform3D(0.924013, 0, -0.382361, 0, 1, 0, 0.382361, 0, 0.924013, 
 
 [node name="Elevators" type="Node3D" parent="World/Terrain"]
 
-[node name="Elevator" parent="World/Terrain/Elevators" node_paths=PackedStringArray("levers") instance=ExtResource("6_vwn7c")]
+[node name="Elevator" parent="World/Terrain/Elevators" node_paths=PackedStringArray("floors") instance=ExtResource("6_vwn7c")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -49)
-levers = [NodePath("../../Levers/Lever3D2_down"), NodePath("../../Levers/Lever3D_up")]
+floors = [NodePath("ElevatorFloor3D"), NodePath("ElevatorFloor3D2")]
 animation_duration = 2.0
 
-[node name="Levers" type="Node3D" parent="World/Terrain"]
+[node name="ElevatorFloor3D" type="Node3D" parent="World/Terrain/Elevators/Elevator" node_paths=PackedStringArray("buttons")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -49)
+top_level = true
+script = ExtResource("6_h2c6w")
+buttons = [NodePath("Button3D3"), NodePath("../BottomElevatorButton")]
 
-[node name="Lever3D_up" parent="World/Terrain/Levers" instance=ExtResource("5_wof0i")]
-transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, -1.5, 6.3, -48)
-animation_duration = 0.3
+[node name="Button3D3" parent="World/Terrain/Elevators/Elevator/ElevatorFloor3D" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.25, 1.25, 1.5)
+random_audio_component = NodePath("RandomAudioComponent")
 
-[node name="Lever3D2_down" parent="World/Terrain/Levers" instance=ExtResource("5_wof0i")]
-transform = Transform3D(1.91069e-15, 4.37114e-08, -1, 1, -4.37114e-08, 0, -4.37114e-08, -1, -4.37114e-08, -1.5, 1.3, -48)
-animation_duration = 0.3
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Terrain/Elevators/Elevator/ElevatorFloor3D/Button3D3"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
+
+[node name="ElevatorFloor3D2" type="Node3D" parent="World/Terrain/Elevators/Elevator" node_paths=PackedStringArray("buttons")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -49)
+top_level = true
+script = ExtResource("6_h2c6w")
+buttons = [NodePath("Button3D5"), NodePath("../TopElevatorButton")]
+
+[node name="Button3D5" parent="World/Terrain/Elevators/Elevator/ElevatorFloor3D2" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -1.25, 1.58272, 1.5)
+random_audio_component = NodePath("RandomAudioComponent")
+
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Terrain/Elevators/Elevator/ElevatorFloor3D2/Button3D5"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
+
+[node name="TopElevatorButton" parent="World/Terrain/Elevators/Elevator" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
+transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -1, 1.52275, 0)
+random_audio_component = NodePath("RandomAudioComponent")
+
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Terrain/Elevators/Elevator/TopElevatorButton"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
+
+[node name="BottomElevatorButton" parent="World/Terrain/Elevators/Elevator" node_paths=PackedStringArray("random_audio_component") instance=ExtResource("8_tvxxh")]
+transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -1, 1.25, 0)
+random_audio_component = NodePath("RandomAudioComponent")
+
+[node name="RandomAudioComponent" type="AudioStreamPlayer3D" parent="World/Terrain/Elevators/Elevator/BottomElevatorButton"]
+script = ExtResource("9_05ho3")
+audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_olnvd"), ExtResource("12_8fxjr"), ExtResource("13_4ur2u"), ExtResource("14_d05wb")])
 
 [node name="Players" type="Node3D" parent="World"]
 

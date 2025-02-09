@@ -5,6 +5,9 @@ extends PlayerState
 @export var deceleration := 25.0
 
 
+func enter(_from: State = null) -> void:
+	player.input.action_just_pressed.connect(_on_action_just_pressed)
+
 func physics_update(delta: float) -> void:
 	player.apply_planar_movement(
 		player.input.get_rotated_planar_input(Vector3.UP),
@@ -36,5 +39,12 @@ func physics_update(delta: float) -> void:
 	
 	player.move_and_slide()
 
-func get_animation_scaling() -> float:
-	return  player.get_planar_velocity().length() / speed
+func exit() -> State:
+	if player.input.action_just_pressed.is_connected(_on_action_just_pressed):
+		player.input.action_just_pressed.disconnect(_on_action_just_pressed)
+	return self
+
+
+func _on_action_just_pressed(action: StringName) -> void:
+	match  action:
+		"jump": state_machine.transition("Jumping")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://d4lgg11r867ad"]
 
-[ext_resource type="Script" path="res://scenes/levels/sandbox_level/button_3d.gd" id="1_mpd6s"]
+[ext_resource type="Script" path="res://scripts/interactables/button_3d.gd" id="1_mpd6s"]
 [ext_resource type="Script" path="res://components/interact_area_component/interact_area_component.gd" id="2_avnqj"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gdwys"]

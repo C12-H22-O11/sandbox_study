@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://cgs56483cegp6"]
+
+[ext_resource type="Script" path="res://scripts/interactables/lever_3d.gd" id="1_y5usy"]
+[ext_resource type="Script" path="res://components/interact_area_component/interact_area_component.gd" id="2_oej4h"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3m760"]
+size = Vector3(0.2, 0.1, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i17wc"]
+size = Vector3(0.1, 0.3, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kf2r0"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[node name="Lever3D" type="Node3D" node_paths=PackedStringArray("interact_area_component", "rotation_point")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1.79249, -47.75)
+script = ExtResource("1_y5usy")
+interact_area_component = NodePath("InteractAreaComponent")
+rotation_point = NodePath("RotationPoint")
+
+[node name="Plate" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_3m760")
+
+[node name="RotationPoint" type="Node3D" parent="."]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0.05, 0)
+
+[node name="Lever" type="MeshInstance3D" parent="RotationPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("BoxMesh_i17wc")
+skeleton = NodePath("../..")
+
+[node name="InteractAreaComponent" type="Area3D" parent="."]
+script = ExtResource("2_oej4h")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractAreaComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+shape = SubResource("BoxShape3D_kf2r0")

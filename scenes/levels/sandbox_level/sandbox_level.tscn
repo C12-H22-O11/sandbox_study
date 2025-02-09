@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=27 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b4gmmr676xj15" path="res://scenes/terrain/wall.tscn" id="3_he61m"]
 [ext_resource type="Script" path="res://scenes/spawners/object_spawner.gd" id="4_bp5yb"]
 [ext_resource type="PackedScene" uid="uid://q4h774jjxk8l" path="res://scenes/terrain/box.tscn" id="4_gmwb0"]
+[ext_resource type="PackedScene" uid="uid://cgs56483cegp6" path="res://scenes/lever_3d/lever_3d.tscn" id="5_wof0i"]
 [ext_resource type="PackedScene" uid="uid://p1uhdnevjeuo" path="res://assets/models/map_blender_test/map_blender_test.glb" id="6_g4cg7"]
 [ext_resource type="PackedScene" uid="uid://bmowo38idccga" path="res://scenes/UI/user_data_ui/user_data_ui.tscn" id="8_2vpun"]
 [ext_resource type="Script" path="res://scenes/UI/lobby_ui/lobby_ui.gd" id="8_6kg30"]
@@ -133,6 +134,8 @@ transform = Transform3D(0.886107, 0, 0.463482, 0, 1, 0, -0.463482, 0, 0.886107, 
 
 [node name="Box2" parent="World/Terrain/Obstacles/Boxes" instance=ExtResource("4_gmwb0")]
 transform = Transform3D(0.924013, 0, -0.382361, 0, 1, 0, 0.382361, 0, 0.924013, 0, 0, 8.91779)
+
+[node name="Lever3D" parent="World/Terrain" instance=ExtResource("5_wof0i")]
 
 [node name="Players" type="Node3D" parent="World"]
 

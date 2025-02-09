@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://8x27mf3mb8sd"]
+[gd_scene load_steps=18 format=3 uid="uid://8x27mf3mb8sd"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_n0sd2"]
 [ext_resource type="Script" path="res://scenes/player/player_visuals.gd" id="2_617xy"]
@@ -17,14 +17,6 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_m7lne"]
 radius = 0.3
 height = 1.8
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rluch"]
-properties/0/path = NodePath(".:rotation")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath("Head:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_lrxlb"]
 radius = 0.3
@@ -73,47 +65,44 @@ properties/1/replication_mode = 1
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("input", "visuals", "label", "head", "camera")]
 script = ExtResource("1_n0sd2")
 input = NodePath("InputSynchronizer")
-visuals = NodePath("PlayerVisuals")
-label = NodePath("PlayerVisuals/Label3D")
-head = NodePath("PlayerVisuals/Head")
-camera = NodePath("PlayerVisuals/Head/Camera3D")
+visuals = NodePath("Visuals")
+label = NodePath("Visuals/Label3D")
+head = NodePath("Visuals/Head")
+camera = NodePath("Visuals/Head/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_m7lne")
 
-[node name="PlayerVisuals" type="Node3D" parent="." node_paths=PackedStringArray("head")]
+[node name="Visuals" type="Node3D" parent="." node_paths=PackedStringArray("head")]
 script = ExtResource("2_617xy")
 head = NodePath("Head")
 
-[node name="VisualSynchronizer" type="MultiplayerSynchronizer" parent="PlayerVisuals"]
-replication_config = SubResource("SceneReplicationConfig_rluch")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="PlayerVisuals"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("CapsuleMesh_lrxlb")
 skeleton = NodePath("../..")
 
-[node name="Head" type="Node3D" parent="PlayerVisuals"]
+[node name="Head" type="Node3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 
-[node name="Camera3D" type="Camera3D" parent="PlayerVisuals/Head"]
+[node name="Camera3D" type="Camera3D" parent="Visuals/Head"]
 
-[node name="InteractionRayCast3D" type="RayCast3D" parent="PlayerVisuals/Head" node_paths=PackedStringArray("input_synchronizer")]
+[node name="InteractionRayCast3D" type="RayCast3D" parent="Visuals/Head" node_paths=PackedStringArray("input_synchronizer")]
 target_position = Vector3(0, 0, -2)
 collide_with_areas = true
 collide_with_bodies = false
 script = SubResource("GDScript_qc8sh")
 input_synchronizer = NodePath("../../../InputSynchronizer")
 
-[node name="Label3D" type="Label3D" parent="PlayerVisuals"]
+[node name="Label3D" type="Label3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 visible = false
 billboard = 1
 double_sided = false
 text = "Player"
 
-[node name="PlayerDebugPanel" type="PanelContainer" parent="PlayerVisuals" node_paths=PackedStringArray("player", "state_machine", "current_state_label")]
+[node name="PlayerDebugPanel" type="PanelContainer" parent="Visuals" node_paths=PackedStringArray("player", "state_machine", "current_state_label")]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 142.0
@@ -123,17 +112,17 @@ player = NodePath("../..")
 state_machine = NodePath("../../StateMachine")
 current_state_label = NodePath("MarginContainer/GridContainer/CurrentState")
 
-[node name="MarginContainer" type="MarginContainer" parent="PlayerVisuals/PlayerDebugPanel"]
+[node name="MarginContainer" type="MarginContainer" parent="Visuals/PlayerDebugPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="GridContainer" type="GridContainer" parent="PlayerVisuals/PlayerDebugPanel/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="Visuals/PlayerDebugPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="CurrentState" type="Label" parent="PlayerVisuals/PlayerDebugPanel/MarginContainer/GridContainer"]
+[node name="CurrentState" type="Label" parent="Visuals/PlayerDebugPanel/MarginContainer/GridContainer"]
 layout_mode = 2
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
@@ -145,6 +134,9 @@ script = ExtResource("5_bt5ev")
 
 [node name="Jumping" type="Node" parent="StateMachine"]
 script = ExtResource("6_0aska")
+speed = null
+acceleration = null
+deceleration = null
 
 [node name="Falling" type="Node" parent="StateMachine"]
 script = ExtResource("7_p4ih0")
@@ -167,4 +159,5 @@ script = ExtResource("11_fufu1")
 [node name="PlayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_y6ycm")
 
-[node name="InputSynchronizer" parent="." instance=ExtResource("10_yxmt4")]
+[node name="InputSynchronizer" parent="." node_paths=PackedStringArray("input_rotation_point") instance=ExtResource("10_yxmt4")]
+input_rotation_point = NodePath("../Visuals")

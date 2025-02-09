@@ -33,23 +33,19 @@ func setup_multiplayer(id: int) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func apply_movement(speed: float, accel: float, decel: float, delta: float, airborne := false) -> void:
-	var input_dir := input.input_direction
-	var direction := input_dir.rotated(-visuals.rotation.y)
-	
-	var planar_velocity := get_planar_velocity()
+func apply_movement(direction: Vector3, speed: float, accel: float, decel: float, delta: float, airborne := false) -> void:
+	var current_velocity := velocity
 	var target_velocity := direction * speed
-	var acceleration_factor := (signf(planar_velocity.dot(target_velocity)) + 1) / 2.0
+	var acceleration_factor := (signf(current_velocity.dot(target_velocity)) + 1) / 2.0
 	var target_acceleration := lerpf(decel, accel, acceleration_factor)
 	
 	if airborne:
-		var held_speed := maxf(direction.normalized().dot(planar_velocity), 0.0)
+		var held_speed := maxf(direction.normalized().dot(current_velocity), 0.0)
 		target_velocity = direction * maxf(held_speed, speed)
 	
-	planar_velocity =  planar_velocity.move_toward(target_velocity, target_acceleration * delta)
+	current_velocity =  current_velocity.move_toward(target_velocity, target_acceleration * delta)
 	
-	velocity.x = planar_velocity.x
-	velocity.z = planar_velocity.y
+	velocity = current_velocity
 
 func get_planar_velocity() -> Vector2:
 	return Vector2(velocity.x, velocity.z)

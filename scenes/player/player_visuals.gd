@@ -6,6 +6,10 @@ extends Node3D
 @onready var previous_velocity := (owner as CharacterBody3D).velocity
 
 
+func _ready() -> void:
+	if is_multiplayer_authority() and owner.is_node_ready():
+		send_visuals.rpc(head.rotation, rotation)
+
 func _input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
@@ -18,9 +22,14 @@ func _input(event: InputEvent) -> void:
 		mouse_input *= 0.2
 		rotate_y(mouse_input.x)
 		head.rotation.x = clampf(head.rotation.x+mouse_input.y, -TAU/4, TAU/4)
+		
+		send_visuals.rpc(head.rotation, rotation)
 
 
 func _process(delta: float) -> void:
+	if is_multiplayer_authority():
+		send_visuals.rpc(head.rotation, rotation)
+	
 	if Engine.get_frames_per_second() > Engine.physics_ticks_per_second:
 		if not top_level:
 			top_level = true
@@ -35,3 +44,9 @@ func _process(delta: float) -> void:
 		if top_level:
 			top_level = false
 			position = Vector3()
+
+@rpc("authority", "call_remote", "unreliable_ordered")
+func send_visuals(head_rotation: Vector3, visuals_rotation: Vector3) -> void:
+	rotation.y = visuals_rotation.y
+	head.rotation.x = head_rotation.x
+	

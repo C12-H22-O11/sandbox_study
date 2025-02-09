@@ -4,14 +4,19 @@ signal action_just_pressed(action: StringName)
 signal action_just_released(action: StringName)
 
 @export var pressed_actions := {}
-@export var input_direction := Vector2()
+@export var raw_directional_input := Vector3()
+@export var input_rotation_point: Node3D
 
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
 	
-	input_direction = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var lateral_input := Input.get_axis("move_left", "move_right")
+	var vertical_input := Input.get_axis("jump", "crouch")
+	var longitudinal_input := Input.get_axis("move_forward", "move_backward")
+	
+	raw_directional_input = Vector3(lateral_input, vertical_input, longitudinal_input)
 	
 	for action in InputMap.get_actions():
 		if Input.is_action_just_pressed(action):
@@ -23,6 +28,23 @@ func _physics_process(_delta: float) -> void:
 
 func is_action_pressed(action: StringName) -> bool:
 	return pressed_actions.get(action, false)
+
+func get_raw_planar_input(exclude_axis: Vector3) -> Vector3:
+	var length := raw_directional_input.dot(exclude_axis.normalized())
+	return raw_directional_input - (exclude_axis.normalized() * length)
+
+func get_rotated_raw_planar_input(exclude_axis: Vector3) -> Vector3:
+	return get_raw_planar_input(exclude_axis) * input_rotation_point.basis.get_rotation_quaternion().inverse()
+
+func get_planar_input(exclude_axis: Vector3) -> Vector3:
+	var raw_planar_input := get_raw_planar_input(exclude_axis)
+	var raw_abs_planar_input := raw_planar_input.abs()
+	var max_axis_index := raw_abs_planar_input.max_axis_index()
+	var max_axis_length := clampf(raw_abs_planar_input[max_axis_index], 0.0, 1.0)
+	return raw_directional_input.normalized() * max_axis_length
+
+func get_rotated_planar_input(exclude_axis: Vector3) -> Vector3:
+	return get_planar_input(exclude_axis) * input_rotation_point.basis.get_rotation_quaternion().inverse()
 
 
 @rpc("authority", "call_local", "unreliable_ordered")

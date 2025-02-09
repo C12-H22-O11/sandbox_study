@@ -12,7 +12,7 @@ func physics_update(_delta: float) -> void:
 	else:
 		state_machine.transition("Falling")
 	
-	if not player.input.input_direction.is_zero_approx():
+	if not player.input.raw_directional_input.is_zero_approx():
 		if player.input.is_action_pressed("sprint"):
 			state_machine.transition("Sprinting")
 		elif player.input.is_action_pressed("walk"):

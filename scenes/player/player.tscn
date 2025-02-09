@@ -35,15 +35,24 @@ script/source = "extends RayCast3D
 
 @export var input_synchronizer: InputSynchronizer
 
+var can_interact: bool
+
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
 	
-	if input_synchronizer.is_action_pressed(\"interact\"):
+	if input_synchronizer.is_action_pressed(\"interact\") and can_interact:
 		var interactable_area := get_interactable_area()
 		if interactable_area:
-			interactable_area.interact(null)
+			if interactable_area.continuous:
+				interactable_area.interact(null)
+			else:
+				can_interact = false
+				interactable_area.interact(null)
+	
+	if not input_synchronizer.is_action_pressed(\"interact\"):
+		can_interact = true
 
 
 func get_interactable_area() -> InteractAreaComponent:

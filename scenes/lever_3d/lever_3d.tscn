@@ -32,6 +32,7 @@ skeleton = NodePath("../..")
 
 [node name="InteractAreaComponent" type="Area3D" parent="."]
 script = ExtResource("2_oej4h")
+continuous = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractAreaComponent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)

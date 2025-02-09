@@ -2,10 +2,12 @@ class_name Lever3D extends Node3D
 
 signal toggled(toggle: bool)
 
+@export var animation_duration: float = .2
+
 @export var interact_area_component: InteractAreaComponent
 @export var rotation_point: Node3D
 
-var tween: Tween = null
+var tween: Tween
 var is_toggle: bool = false
 
 
@@ -26,13 +28,13 @@ func _on_interaction(_from: Player) -> void:
 
 
 func _on_toggled(toggle: bool) -> void:
-	if tween != null:
-		tween.stop()
+	if tween:
+		if  tween.is_running(): 
+			tween.stop()
+
+	if toggle:
+		tween = create_tween()
+		tween.tween_property(rotation_point, "rotation", Vector3(0,0,TAU/8), animation_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	else:
 		tween = create_tween()
-		
-	print(toggle)
-	if toggle:
-		tween.tween_property(rotation_point, "rotation", Vector3(0,0,TAU/8), 1)
-	else:
-		tween.tween_property(rotation_point, "rotation", Vector3(0,0,-TAU/8), 1) 
+		tween.tween_property(rotation_point, "rotation", Vector3(0,0,-TAU/8), animation_duration).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)

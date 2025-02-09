@@ -32,7 +32,10 @@ func tween_position() -> void:
 		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		
 func get_factor() -> float:
-	return inverse_lerp(start_position.x, (travel + start_position).x, position.x)
+	var dist_travel := start_position.distance_to(start_position + travel)
+	var dist_pos := start_position.distance_to(position)
+	
+	return inverse_lerp(0, dist_travel, dist_pos)
 
 # Request door state
 @rpc("any_peer", "reliable")

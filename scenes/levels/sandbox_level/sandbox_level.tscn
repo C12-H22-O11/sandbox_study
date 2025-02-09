@@ -176,7 +176,7 @@ audio_streams = Array[AudioStream]([ExtResource("10_d303m"), ExtResource("11_oln
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, -15.75)
 script = ExtResource("15_3llo0")
 buttons = [NodePath("../Button3D"), NodePath("../Button3D2")]
-travel = Vector3(1.6, 0, 0)
+travel = Vector3(1.6, 5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="World/Door"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)

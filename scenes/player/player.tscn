@@ -134,9 +134,6 @@ script = ExtResource("5_bt5ev")
 
 [node name="Jumping" type="Node" parent="StateMachine"]
 script = ExtResource("6_0aska")
-speed = null
-acceleration = null
-deceleration = null
 
 [node name="Falling" type="Node" parent="StateMachine"]
 script = ExtResource("7_p4ih0")

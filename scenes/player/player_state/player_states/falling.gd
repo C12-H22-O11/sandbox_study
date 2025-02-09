@@ -13,7 +13,7 @@ func update(delta: float) -> void:
 
 func physics_update(delta: float) -> void:
 	player.apply_gravity(Vector3.DOWN * 9.81, delta)
-	player.apply_movement(speed, acceleration, 	deceleration, delta, true)
+	player.apply_movement(player.input.get_planar_input(Vector3.UP), speed, acceleration, 	deceleration, delta, true)
 	
 	if player.is_on_floor():
 			state_machine.transition("Landing")

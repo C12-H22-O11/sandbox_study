@@ -6,7 +6,7 @@ extends PlayerState
 
 
 func physics_update(delta: float) -> void:
-	player.apply_movement(speed, acceleration, 	deceleration, delta)
+	player.apply_movement(player.input.get_planar_input(Vector3.UP), speed, acceleration, 	deceleration, delta)
 	
 	if player.is_on_floor():
 		if player.input.is_action_pressed("jump"):

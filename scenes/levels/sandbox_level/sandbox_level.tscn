@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=29 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -20,6 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://xo82f12alxi1" path="res://assets/sfx/button/button assorted 39.wav" id="13_4ur2u"]
 [ext_resource type="AudioStream" uid="uid://bqpk28rhqt5er" path="res://assets/sfx/button/button assorted 40.wav" id="14_d05wb"]
 [ext_resource type="Script" path="res://scenes/levels/sandbox_level/door_3d.gd" id="15_3llo0"]
+[ext_resource type="Script" path="res://scripts/pause_menu/pause_menu.gd" id="21_88icr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
 sky_top_color = Color(0.23908, 0.463795, 0.678248, 1)
@@ -239,6 +240,69 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="World/Door"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
 shape = SubResource("BoxShape3D_3iwmu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="World"]
+
+[node name="PauseMenu" type="Control" parent="World/CanvasLayer" node_paths=PackedStringArray("resume_button", "quit_button")]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("21_88icr")
+resume_button = NodePath("PanelContainer/VBoxContainer/Resume")
+quit_button = NodePath("PanelContainer/VBoxContainer/Quit")
+
+[node name="ColorRect" type="ColorRect" parent="World/CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.160784)
+
+[node name="PanelContainer" type="PanelContainer" parent="World/CanvasLayer/PauseMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -134.5
+offset_top = -61.5
+offset_right = 134.5
+offset_bottom = 61.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="World/CanvasLayer/PauseMenu/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Resume" type="Button" parent="World/CanvasLayer/PauseMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Resume"
+
+[node name="Quit" type="Button" parent="World/CanvasLayer/PauseMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 64, 0)

@@ -1,6 +1,7 @@
 extends PlayerState
 
-func physics_update(delta: float) -> void:
+func enter(_from: State = null) -> void:
+	player.move_and_slide()
 	if player.get_planar_velocity().is_zero_approx():
 		state_machine.transition("Idle")
 		return
@@ -16,4 +17,4 @@ func physics_update(delta: float) -> void:
 	else:
 		state_machine.transition("Running")
 		return
-	player.move_and_slide()
+	

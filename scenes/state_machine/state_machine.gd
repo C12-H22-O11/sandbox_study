@@ -10,7 +10,10 @@ signal transitioned(from: State, to: State)
 func _ready() -> void:
 	assert(current_state != null, "State does not have current node")
 	
-	transition(self.get_path_to(current_state))
+	for state in get_states():
+		state.requested_transition.connect(_on_requested_transition.bind(state))
+	
+	transition(current_state, null)
 
 
 func _process(delta: float) -> void:
@@ -20,12 +23,24 @@ func _physics_process(delta: float) -> void:
 	current_state.physics_update(delta)
 
 
-func transition(to: NodePath) -> void:
-	var previous_state := 	await current_state.exit()
-	var target_state := get_node(to) as State
-	state_exited.emit(previous_state)
+func get_states() -> Array[State]:
+	var states: Array[State] = []
+	for child in get_children():
+		if child is State:
+			states.append(child)
+	return  states
+
+
+func transition(to_state: State, from_state: State) -> void:
+	if from_state: 
+		from_state.exit()
+	state_exited.emit(from_state)
 	
-	current_state = target_state
-	await target_state.enter(previous_state)
-	state_entered.emit(target_state)
-	transitioned.emit(previous_state, current_state)
+	current_state = to_state
+	await to_state.enter(from_state)
+	state_entered.emit(to_state)
+	
+	transitioned.emit(from_state, current_state)
+
+func _on_requested_transition(to_path: NodePath, from: State) -> void:
+	transition(get_node(to_path), from)

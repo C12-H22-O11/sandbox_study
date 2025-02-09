@@ -58,8 +58,10 @@ func apply_planar_movement(input: Vector3, speed: float, accel: float, decel: fl
 	velocity = planar_velocity.move_toward(target_velocity, target_acceleration * delta) + exclude_axis_vector
 
 
-func get_planar_velocity() -> Vector2:
-	return Vector2(velocity.x, velocity.z)
+func is_falling(gravity: Vector3) -> bool:
+	var value := velocity.dot(gravity)
+	return value > 0
+
 
 func apply_gravity(gravity: Vector3, delta: float) -> void:
 	if not is_on_floor():

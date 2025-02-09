@@ -2,19 +2,23 @@ extends PlayerState
 
 func enter(_from: State = null) -> void:
 	player.move_and_slide()
-	if player.get_planar_velocity().is_zero_approx():
-		state_machine.transition("Idle")
+	
+	if player.input.is_action_pressed("jump"):
+		requested_transition.emit("Jumping")
 		return
-	elif player.input.is_action_pressed("jump"):
-		state_machine.transition("Jumping")
+	
+	if Math.get_planar_vector3(player.velocity, Vector3.UP).is_zero_approx():
+		requested_transition.emit("Idle")
 		return
-	elif player.input.is_action_pressed("sprint"):
-		state_machine.transition("Sprinting")
+	
+	if player.input.is_action_pressed("sprint"):
+		requested_transition.emit("Sprinting")
 		return
-	elif player.input.is_action_pressed("walk"):
-		state_machine.transition("Walking")
+		
+	if player.input.is_action_pressed("walk"):
+		requested_transition.emit("Walking")
 		return
 	else:
-		state_machine.transition("Running")
+		requested_transition.emit("Running")
 		return
 	

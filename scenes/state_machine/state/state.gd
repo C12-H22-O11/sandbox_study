@@ -1,6 +1,6 @@
 class_name State extends Node
 
-@onready var state_machine: StateMachine = get_parent()
+signal requested_transition(to: StringName)
 
 
 func enter(_from: State = null) -> void:

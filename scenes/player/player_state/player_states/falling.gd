@@ -25,7 +25,7 @@ func physics_update(delta: float) -> void:
 	
 	
 	if player.is_on_floor():
-			state_machine.transition("Landing")
+			requested_transition.emit("Landing")
 			return
 	
 	player.move_and_slide()

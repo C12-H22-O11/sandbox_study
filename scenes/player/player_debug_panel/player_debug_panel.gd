@@ -13,4 +13,6 @@ func _ready() -> void:
 	state_machine.transitioned.connect(_on_state_transitioned)
 
 func _on_state_transitioned(from: State, to: State) -> void:
-	current_state_label.text = "Current state: %s (prev: %s) " % [to.name, from.name]
+	var to_str: String = "Current state: %s" % to.name if to else ""
+	var from_str: String = " - (prev: %s)" % from.name if from else ""
+	current_state_label.text = "%s%s " % [to_str, from_str]

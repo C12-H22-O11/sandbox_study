@@ -21,11 +21,11 @@ func physics_update(delta: float) -> void:
 		true
 	)
 	
-	if player.velocity.y <= 0:
+	if player.is_falling(Vector3.DOWN * 9.81):
 		if player.is_on_floor():
-			state_machine.transition("Idle")
+			requested_transition.emit("Idle")
 			return
-		state_machine.transition("Falling")
+		requested_transition.emit("Falling")
 		return
 	
 	player.move_and_slide()

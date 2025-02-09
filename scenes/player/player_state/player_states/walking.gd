@@ -20,21 +20,22 @@ func physics_update(delta: float) -> void:
 	
 	if player.is_on_floor():
 		if player.input.is_action_pressed("jump"):
-			state_machine.transition("Jumping")
+			requested_transition.emit("Jumping")
 			return
 	else:
-		state_machine.transition("Falling")
-		return
+		if player.is_falling(Vector3.DOWN * 9.81):
+			requested_transition.emit("Falling")
+			return
 	
 	if player.get_planar_velocity().is_zero_approx():
-		state_machine.transition("Idle")
+		requested_transition.emit("Idle")
 		return
 	
 	if player.input.is_action_pressed("sprint"):
-		state_machine.transition("Sprinting")
+		requested_transition.emit("Sprinting")
 		return
 	elif not player.input.is_action_pressed("walk"):
-		state_machine.transition("Running")
+		requested_transition.emit("Running")
 		return
 	
 	player.move_and_slide()
@@ -47,4 +48,6 @@ func exit() -> State:
 
 func _on_action_just_pressed(action: StringName) -> void:
 	match  action:
-		"jump": state_machine.transition("Jumping")
+		"jump": 
+			if player.is_on_floor():
+				requested_transition.emit("Jumping")

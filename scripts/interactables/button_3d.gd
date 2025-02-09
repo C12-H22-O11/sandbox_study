@@ -30,9 +30,21 @@ func press() -> void:
 		just_pressed.emit()
 	timer.start()
 
+func animate(height: float) -> void:
+	if tween and tween.is_running():
+		tween.stop()
+	tween = create_tween()
+	tween.tween_property(button_mesh, "position", Vector3.UP * height, 0.05).set_ease(Tween.EASE_IN_OUT)
+
 func play_sound() -> void:
 	if random_audio_component != null:
 		random_audio_component.play_random()
+
+@rpc("any_peer", "call_local", "unreliable")
+func trigger_effects(height: float) -> void:
+	play_sound()
+	animate(height)
+
 
 func _on_interaction(from: Player) -> void:
 	press()
@@ -42,17 +54,8 @@ func _on_timeout() -> void:
 	just_released.emit()
 
 func _on_just_pressed() -> void:
-	play_sound()
-	
-	if tween and tween.is_running():
-		tween.stop()
-	tween = create_tween()
-	tween.tween_property(button_mesh, "position", Vector3.UP * .025, 0.05).set_ease(Tween.EASE_IN_OUT)
+	trigger_effects.rpc(.025)
 
 func _on_just_released() -> void:
-	play_sound()
+	trigger_effects.rpc(.05)
 	
-	if tween and tween.is_running():
-		tween.stop()
-	tween = create_tween()
-	tween.tween_property(button_mesh, "position", Vector3.UP * .05, 0.05).set_ease(Tween.EASE_IN_OUT)

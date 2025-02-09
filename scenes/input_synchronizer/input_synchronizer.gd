@@ -29,9 +29,16 @@ func _physics_process(_delta: float) -> void:
 func is_action_pressed(action: StringName) -> bool:
 	return pressed_actions.get(action, false)
 
+func is_attempting_to_move() -> bool:
+	return not raw_directional_input.is_zero_approx()
+
+func is_attempting_to_move_planar(exclude_axis: Vector3) -> bool:
+	return not get_raw_planar_input(exclude_axis).is_zero_approx()
+
 func get_raw_planar_input(exclude_axis: Vector3) -> Vector3:
 	var length := raw_directional_input.dot(exclude_axis.normalized())
-	return raw_directional_input - (exclude_axis.normalized() * length)
+	var raw_planar_input := raw_directional_input - (exclude_axis.normalized() * length)
+	return raw_planar_input
 
 func get_rotated_raw_planar_input(exclude_axis: Vector3) -> Vector3:
 	return get_raw_planar_input(exclude_axis) * input_rotation_point.basis.get_rotation_quaternion().inverse()
@@ -41,7 +48,8 @@ func get_planar_input(exclude_axis: Vector3) -> Vector3:
 	var raw_abs_planar_input := raw_planar_input.abs()
 	var max_axis_index := raw_abs_planar_input.max_axis_index()
 	var max_axis_length := clampf(raw_abs_planar_input[max_axis_index], 0.0, 1.0)
-	return raw_directional_input.normalized() * max_axis_length
+	var planar_input := raw_planar_input.normalized() * max_axis_length
+	return planar_input
 
 func get_rotated_planar_input(exclude_axis: Vector3) -> Vector3:
 	return get_planar_input(exclude_axis) * input_rotation_point.basis.get_rotation_quaternion().inverse()

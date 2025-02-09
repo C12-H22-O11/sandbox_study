@@ -20,14 +20,21 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		var mouse_input := -Vector2(deg_to_rad(event.relative.x), deg_to_rad(event.relative.y))
 		mouse_input *= 0.2
-		rotate_y(mouse_input.x)
-		head.rotation.x = clampf(head.rotation.x+mouse_input.y, -TAU/4, TAU/4)
 		
+		handle_rotation(mouse_input)
 		send_visuals.rpc(head.rotation, rotation)
+
+
+func handle_rotation(rot: Vector2) -> void:
+	rotate_y(rot.x)
+	head.rotation.x = clampf(head.rotation.x + rot.y, -TAU/4, TAU/4)
+
 
 
 func _process(delta: float) -> void:
 	if is_multiplayer_authority():
+		var view_joystick_input := Input.get_vector("look_left", "look_right", "look_up", "look_down") * -.02
+		handle_rotation(view_joystick_input)
 		send_visuals.rpc(head.rotation, rotation)
 	
 	if Engine.get_frames_per_second() > Engine.physics_ticks_per_second:

@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d4lgg11r867ad"]
+[gd_scene load_steps=9 format=3 uid="uid://d4lgg11r867ad"]
 
 [ext_resource type="Script" path="res://scripts/interactables/button_3d.gd" id="1_mpd6s"]
 [ext_resource type="Script" path="res://components/interact_area_component/interact_area_component.gd" id="2_avnqj"]
+[ext_resource type="Script" path="res://scenes/elevator_3d/visuals.gd" id="3_rnl28"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gdwys"]
 size = Vector3(0.25, 0.25, 0.25)
@@ -28,7 +29,7 @@ rings = 0
 script = ExtResource("1_mpd6s")
 interact_area_component = NodePath("InteractAreaComponent")
 timer = NodePath("ButtonTimer")
-button_mesh = NodePath("ButtonMesh")
+button_mesh = NodePath("Visuals/ButtonMesh")
 
 [node name="InteractAreaComponent" type="Area3D" parent="."]
 script = ExtResource("2_avnqj")
@@ -41,12 +42,15 @@ shape = SubResource("BoxShape3D_gdwys")
 wait_time = 0.1
 one_shot = true
 
-[node name="ButtonBase" type="MeshInstance3D" parent="."]
+[node name="Visuals" type="Node3D" parent="."]
+script = ExtResource("3_rnl28")
+
+[node name="ButtonBase" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00162393, 0.025, 0)
 mesh = SubResource("BoxMesh_vvsuf")
 skeleton = NodePath("")
 
-[node name="ButtonMesh" type="MeshInstance3D" parent="."]
+[node name="ButtonMesh" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 mesh = SubResource("CylinderMesh_0qqcv")
 skeleton = NodePath("")

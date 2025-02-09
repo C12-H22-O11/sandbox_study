@@ -39,7 +39,7 @@ func apply_movement(input: Vector3, speed: float, accel: float, decel: float, de
 	var acceleration_factor := (signf(current_velocity.dot(target_velocity)) + 1) / 2.0
 	var target_acceleration := lerpf(decel, accel, acceleration_factor)
 	velocity =  current_velocity.move_toward(target_velocity, target_acceleration * delta)
-	
+
 func apply_planar_movement(input: Vector3, speed: float, accel: float, decel: float, delta: float, exclude_axis := Vector3(),  airborne := false) -> void:
 	assert(exclude_axis.is_normalized(), "Exclude axis should be normalized")
 	
@@ -55,7 +55,9 @@ func apply_planar_movement(input: Vector3, speed: float, accel: float, decel: fl
 		var held_speed := maxf(input.normalized().dot(planar_velocity), 0.0)
 		target_velocity = input * maxf(held_speed, speed)
 	
-	velocity = planar_velocity.move_toward(target_velocity, target_acceleration * delta) + exclude_axis_vector
+	var new_velocity := planar_velocity.move_toward(target_velocity, target_acceleration * delta) + exclude_axis_vector
+	
+	velocity = new_velocity
 
 
 func is_falling(gravity: Vector3) -> bool:

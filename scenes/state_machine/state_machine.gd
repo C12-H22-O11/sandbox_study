@@ -6,14 +6,16 @@ signal transitioned(from: State, to: State)
 
 @export var current_state: State
 
+var previous_state: State = null
+
 
 func _ready() -> void:
 	assert(current_state != null, "State does not have current node")
 	
 	for state in get_states():
-		state.requested_transition.connect(_on_requested_transition.bind(state))
+		state.transition_request.connect(_on_transition_request.bind(state))
 	
-	transition(current_state, null)
+	transition(current_state, previous_state)
 
 
 func _process(delta: float) -> void:
@@ -30,17 +32,25 @@ func get_states() -> Array[State]:
 			states.append(child)
 	return  states
 
-
 func transition(to_state: State, from_state: State) -> void:
-	if from_state: 
-		from_state.exit()
-	state_exited.emit(from_state)
+	previous_state = from_state
+	
+	if previous_state == null:
+		if previous_state != current_state:
+			previous_state = current_state
+			
+	else:
+		previous_state.exit()
+	
+	state_exited.emit(previous_state)
 	
 	current_state = to_state
-	await to_state.enter(from_state)
-	state_entered.emit(to_state)
+	current_state.active = true
+	current_state.enter(previous_state)
+	state_entered.emit(current_state)
 	
-	transitioned.emit(from_state, current_state)
+	transitioned.emit(previous_state, current_state)
 
-func _on_requested_transition(to_path: NodePath, from: State) -> void:
-	transition(get_node(to_path), from)
+
+func _on_transition_request(to_path: NodePath, from: State) -> void:
+	transition(get_node(to_path), previous_state if from == null else from)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://pgdabagp50qn"]
+[gd_scene load_steps=5 format=3 uid="uid://pgdabagp50qn"]
 
 [ext_resource type="Script" path="res://scripts/elevator_3d/elevator_3d.gd" id="1_b4m80"]
+[ext_resource type="Script" path="res://scenes/elevator_3d/visuals.gd" id="2_6cvmy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dyk4i"]
 size = Vector3(2, 0.25, 2)
@@ -15,7 +16,10 @@ script = ExtResource("1_b4m80")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.125, 0)
 shape = SubResource("BoxShape3D_dyk4i")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Visuals" type="Node3D" parent="."]
+script = ExtResource("2_6cvmy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.125, 0)
 mesh = SubResource("BoxMesh_o84g6")
-skeleton = NodePath("../CollisionShape3D")
+skeleton = NodePath("../../CollisionShape3D")

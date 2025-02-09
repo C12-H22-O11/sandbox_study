@@ -6,29 +6,29 @@ extends PlayerState
 
 
 func enter(_from: State = null) -> void:
-	player.jump(5.0 * Vector3.UP)
+	player.jump(5.0 * -gravity.normalized())
+	print("ty")
 
 func physics_update(delta: float) -> void:
-	player.apply_gravity(Vector3.DOWN * 9.81, delta)
+	if not player.is_on_floor():
+		if player.is_falling(gravity):
+			request_transition("Falling")
+			return
+		player.apply_gravity(gravity, delta)
 	
 	player.apply_planar_movement(
-		player.input.get_rotated_planar_input(Vector3.UP),
+		player.input.get_rotated_planar_input(gravity),
 		speed, 
 		acceleration,
 		deceleration,
 		delta,
-		Vector3.UP,
+		gravity.normalized(),
 		true
 	)
 	
-	if player.is_falling(Vector3.DOWN * 9.81):
-		if player.is_on_floor():
-			requested_transition.emit("Idle")
-			return
-		requested_transition.emit("Falling")
-		return
-	
-	player.move_and_slide()
+	move_and_slide()
+
+
 
 func exit() -> State:
 	return self

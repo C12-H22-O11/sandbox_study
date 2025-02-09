@@ -13,7 +13,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	
 	var lateral_input := Input.get_axis("move_left", "move_right")
-	var vertical_input := Input.get_axis("jump", "crouch")
+	var vertical_input := Input.get_axis("crouch", "jump")
 	var longitudinal_input := Input.get_axis("move_forward", "move_backward")
 	
 	raw_input = Vector3(lateral_input, vertical_input, longitudinal_input)
@@ -41,6 +41,9 @@ func get_raw_input() -> Vector3:
 
 func get_input() -> Vector3:
 	return Math.get_scaled_normalized_vector3(raw_input)
+
+func get_rotated_input() -> Vector3:
+	return get_input() * input_rotation_point.basis.get_rotation_quaternion().inverse()
 
 
 func get_raw_planar_input(exclude_axis: Vector3) -> Vector3:

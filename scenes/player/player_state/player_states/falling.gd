@@ -13,22 +13,22 @@ func update(delta: float) -> void:
 
 func physics_update(delta: float) -> void:
 	player.apply_planar_movement(
-		player.input.get_rotated_planar_input(Vector3.UP),
+		player.input.get_rotated_planar_input(gravity),
 		speed, 
 		acceleration,
 		deceleration,
 		delta,
-		Vector3.UP,
+		gravity.normalized(),
 		true
 	)
-	player.apply_gravity(Vector3.DOWN * 9.81, delta)
-	
 	
 	if player.is_on_floor():
-			requested_transition.emit("Landing")
-			return
+		transition_request.emit("Landing")
+		return
+	else:
+		player.apply_gravity(gravity, delta)
 	
-	player.move_and_slide()
+	move_and_slide()
 
 func exit() -> State:
 	return self

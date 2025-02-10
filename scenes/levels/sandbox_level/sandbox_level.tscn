@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://kop0l0v86hog"]
+[gd_scene load_steps=30 format=3 uid="uid://kop0l0v86hog"]
 
 [ext_resource type="PackedScene" uid="uid://d076u6vcprobw" path="res://scenes/terrain/platform.tscn" id="2_2emca"]
 [ext_resource type="Material" uid="uid://ba75cp2p48ye4" path="res://resources/materials/grid/grid.tres" id="2_2oyl2"]
@@ -20,6 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://xo82f12alxi1" path="res://assets/sfx/button/button assorted 39.wav" id="13_4ur2u"]
 [ext_resource type="AudioStream" uid="uid://bqpk28rhqt5er" path="res://assets/sfx/button/button assorted 40.wav" id="14_d05wb"]
 [ext_resource type="Script" path="res://scenes/levels/sandbox_level/door_3d.gd" id="15_3llo0"]
+[ext_resource type="Script" path="res://scripts/visuals.gd" id="18_qnhun"]
 [ext_resource type="Script" path="res://scripts/pause_menu/pause_menu.gd" id="21_88icr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
@@ -232,7 +233,10 @@ script = ExtResource("15_3llo0")
 buttons = [NodePath("../Button3D"), NodePath("../Button3D2")]
 travel = Vector3(1.6, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Door"]
+[node name="Node3D" type="Node3D" parent="World/Door"]
+script = ExtResource("18_qnhun")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="World/Door/Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
 mesh = SubResource("BoxMesh_4qucd")
 skeleton = NodePath("")

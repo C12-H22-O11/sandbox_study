@@ -16,7 +16,7 @@ func _ready() -> void:
 
 func update() -> void:
 	update_member_count_label()
-	member_count_label.visible = Lobby.in_lobby
+	member_count_label.visible = Lobby.in_lobby()
 
 
 func fill() -> void:

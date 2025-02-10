@@ -1,7 +1,9 @@
 extends Node
+## Singleton used for storing and keeping accessible general use variables.
 
-var e_net_settings := ENetSettings.load_or_create()
-var user_data := UserData.load_or_create()
+
+var e_net_settings := ENetSettings.load_or_create() ## Auto-saving resource holding ENet networking settings.
+var user_data := UserData.load_or_create() ## Auto-saving resource holding the user data.
 
 
 func _ready() -> void:

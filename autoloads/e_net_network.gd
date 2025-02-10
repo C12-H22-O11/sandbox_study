@@ -1,5 +1,8 @@
 extends Node
+## Singleton handling ENet client and server creation and propagation of network signals to the Lobby singleton.
 
+
+## Emitted when an ENet server is created with [param slot_count] representing available slots.
 signal server_created(slot_count: int)
 
 
@@ -12,8 +15,8 @@ func _ready() -> void:
 	
 	Lobby.lobby_closed.connect(_on_lobby_closed)
 
-
-func host() -> void:
+## Creates ENet server using saved settings in [member Globals.e_net_settings].
+func host() -> Error:
 	var port: int = Globals.e_net_settings.host_port
 	var slots: int = Globals.e_net_settings.host_slots
 	var enet_peer := ENetMultiplayerPeer.new()
@@ -21,12 +24,14 @@ func host() -> void:
 	var error := enet_peer.create_server(port, slots)
 	if error != OK:
 		assert(error == OK, "ENetNetwork: Failed to create %s slot(s) server using port %s with code: %s" % [slots, port, error])
-		return
+		return error
 	multiplayer.multiplayer_peer = enet_peer
 	print("ENetNetwork (%s): Successfully created %s slot(s) server using port %s" % [multiplayer.get_unique_id(), slots, port])
 	server_created.emit(slots)
+	return OK
 
-func join() -> void:
+## Creates ENet client using saved settings in [member Globals.e_net_settings]
+func join() -> Error:
 	var ip: String = Globals.e_net_settings.join_ip
 	var port: int = Globals.e_net_settings.join_port
 	print("ENetNetwork: Attempting to create client using %s:%s" % [ip, port])
@@ -34,9 +39,10 @@ func join() -> void:
 	var error := enet_peer.create_client(ip, port)
 	if error != OK:
 		assert(error == OK, "ENetNetwork: Failed to create client using %s:%s with code: %s" % [ip, port, error])
-		return
+		return error
 	multiplayer.multiplayer_peer = enet_peer
 	print("ENetNetwork (%s): Successfully created client using %s:%s" % [multiplayer.get_unique_id(), ip, port])
+	return OK
 
 
 #region Signal Functions

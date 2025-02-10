@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/interactables/button_3d.gd" id="1_mpd6s"]
 [ext_resource type="Script" path="res://components/interact_area_component/interact_area_component.gd" id="2_avnqj"]
-[ext_resource type="Script" path="res://scripts/visuals.gd" id="3_rnl28"]
+[ext_resource type="Script" path="res://components/visual_lerp_component/visual_lerp_component.gd" id="3_rnl28"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gdwys"]
 size = Vector3(0.25, 0.25, 0.25)

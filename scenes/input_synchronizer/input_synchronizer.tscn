@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://scenes/input_synchronizer/input_synchronizer.gd" id="1_d54ym"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5glxq"]
-properties/0/path = NodePath("InputSynchronizer:pressed_actions")
+properties/0/path = NodePath("InputSynchronizer:_pressed_actions")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath("InputSynchronizer:raw_input")
+properties/1/path = NodePath("InputSynchronizer:_raw_input")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 

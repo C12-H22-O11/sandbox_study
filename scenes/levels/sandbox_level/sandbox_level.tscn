@@ -20,7 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://xo82f12alxi1" path="res://assets/sfx/button/button assorted 39.wav" id="13_4ur2u"]
 [ext_resource type="AudioStream" uid="uid://bqpk28rhqt5er" path="res://assets/sfx/button/button assorted 40.wav" id="14_d05wb"]
 [ext_resource type="Script" path="res://scenes/levels/sandbox_level/door_3d.gd" id="15_3llo0"]
-[ext_resource type="Script" path="res://scripts/visuals.gd" id="18_qnhun"]
+[ext_resource type="Script" path="res://components/visual_lerp_component/visual_lerp_component.gd" id="18_qnhun"]
 [ext_resource type="Script" path="res://scripts/pause_menu/pause_menu.gd" id="21_88icr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gcp2o"]
